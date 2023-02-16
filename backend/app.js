@@ -48,30 +48,34 @@ app.use((req, res) => {console.log(req.path)})
 app.use(routes)
 // catching unhandled requests
 app.use((_req, _res, next) => {
-    const err = new Error("The requested resource couldn't be found. ")
-    err.title = "Resource Not Found";
-    err.errors = ["The requested resource couldn't be found."];
-    err.status = 404;
-    next(err);
+  const err = new Error("The requested resource couldn't be found.");
+  err.title = "Resource Not Found";
+  err.errors = { message: "The requested resource couldn't be found." };
+  err.status = 404;
+  next(err);
 })
 // processing sequelize errors
 app.use((err, _req, _res, next) => {
     // check if error is a Sequelize error:
     if (err instanceof ValidationError) {
-      err.errors = err.errors.map((e) => e.message);
+      let errors = {};
+      for (let error of err.errors) {
+        errors[error.path] = error.message;
+      }
       err.title = 'Validation error';
+      err.errors = errors;
     }
     next(err);
   });
 // formatting our errors before sending them as a JSON res
 app.use((err, _req, res, _next) => {
-    res.status(err.status || 500);
-    console.error(err);
-    res.json({
-      title: err.title || 'Server Error',
-      message: err.message,
-      errors: err.errors,
-      stack: isProduction ? null : err.stack
-    });
+  res.status(err.status || 500);
+  console.error(err);
+  res.json({
+    title: err.title || 'Server Error',
+    message: err.message,
+    errors: err.errors,
+    stack: isProduction ? null : err.stack
+  });
   });
 module.exports = app;
