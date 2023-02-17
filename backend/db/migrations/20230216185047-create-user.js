@@ -1,12 +1,10 @@
-'use strict';
+"use strict";
 
-const { now } = require('sequelize/types/utils');
-
-/** @type {import('sequelize-cli').Migration} */
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.createTable("Users", {
@@ -42,8 +40,8 @@ module.exports = {
       }
     }, options);
   },
-  async down(queryInterface, Sequelize) {
-    options.tableName = 'Users'
-    await queryInterface.dropTable(options);
+  down: async (queryInterface, Sequelize) => {
+    options.tableName = "Users";
+    return queryInterface.dropTable(options);
   }
 };
