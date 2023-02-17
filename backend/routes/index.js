@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const apiRouter = require('./api');
+router.use((req, res, next) => {
+   console.log('hasdkfakslklel')
+   next()
+})
 
 router.use('/api', apiRouter)
 // go to this url to get that XSRF

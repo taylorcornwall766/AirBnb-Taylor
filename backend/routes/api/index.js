@@ -10,6 +10,7 @@ router.post('/test', function(req, res) {
 const { setTokenCookie } = require('../../utils/auth.js');
 const { User } = require('../../db/models');
 router.get('/set-token-cookie', async (_req, res) => {
+  // console.log("/1/1//1/1/1/1/1/1/1/1")
   const user = await User.findOne({
       where: {
         username: 'Demo-lition'

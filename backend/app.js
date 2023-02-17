@@ -43,7 +43,7 @@ app.use(
     })
 )
 // debugging showing the path
-app.use((req, res) => {console.log(req.path)})
+// app.use((req, res) => {console.log(req.path)})
 // connect all the routes
 app.use(routes)
 // catching unhandled requests
