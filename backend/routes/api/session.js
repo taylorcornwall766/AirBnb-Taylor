@@ -27,4 +27,13 @@ router.delete("/", (_req, res) => {
   res.clearCookie("token");
   return res.json({ message: "success" });
 });
+router.get('/',restoreUser,(req, res) => {
+      const { user } = req;
+      if (user) {
+        return res.json({
+          user: user.toSafeObject()
+        });
+      } else return res.json({ user: null });
+    }
+  );
 module.exports = router;
