@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const apiRouter = require('./api');
 router.use((req, res, next) => {
-   console.log('hasdkfakslklel')
+   
    next()
 })
 

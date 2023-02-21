@@ -29,7 +29,6 @@ const setTokenCookie = (res, user) => {
 
 const restoreUser = (req, res, next) => {
   // token parsed from cookies
-  // console.log('authjs asflaksfdkalskdfakslfklk')
   const { token } = req.cookies;
   req.user = null;
 
