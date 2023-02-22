@@ -1,5 +1,10 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+options.tableName = 'Spots'
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Spots', {
@@ -62,15 +67,15 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    });
-    await queryInterface.addIndex('Spots', ['country', 'state', 'city', 'address'], {
+    }, options);
+    await queryInterface.addIndex(options, ['country', 'state', 'city', 'address'], {
       name: 'idx_spots_cntry_state_city_address'
     })
-    await queryInterface.addIndex('Spots', ['lat', 'lng'], {
+    await queryInterface.addIndex(options, ['lat', 'lng'], {
       name: 'idx_spots_lat_lng'
     })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Spots');
+    await queryInterface.dropTable(options);
   }
 };
