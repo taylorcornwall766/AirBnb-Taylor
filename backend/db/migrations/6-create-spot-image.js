@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Reviews', {
+    await queryInterface.createTable('SpotImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,39 +10,31 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       spotId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
-        references:{
-          model: 'Spots'
-        }
-      },
-      userId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        references:{
-          model: 'Users'
-        }
       },
-      review: {
-        type: Sequelize.STRING
-      },
-      stars: {
+      url: {
+        type: Sequelize.STRING,
         allowNull: false,
-        type: Sequelize.INTEGER
+      },
+      preview: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        type: Sequelize.DATE
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Reviews');
+    await queryInterface.dropTable('SpotImages');
   }
 };
