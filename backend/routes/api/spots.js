@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Spot, User, SpotImage, Review, ReviewImage,Booking, sequelize} = require('../../db/models')
 const { Op } = require("sequelize");
+const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js")
 router.get('', async (req, res)=> {
     let spots = await Spot.findAll({})
     let spotsArr = []
@@ -65,7 +66,7 @@ router.get('/:id', async(req, res)=>{
         ]
     })
 
-    
+
 
 
     spotJSON.avgStarRating = rating[0].dataValues.avgRating
@@ -74,5 +75,57 @@ router.get('/:id', async(req, res)=>{
     delete spotJSON.User
 
     return res.status(200).json(spotJSON)
+})
+
+router.post('', requireAuth, restoreUser, async(req, res) =>{
+    const {user} = req
+    const {address, city, state, lat, lng,
+           name, description, price, country} = req.body
+    let errors = {}
+    if(!address){
+        errors.address = "Street address is required"
+    }
+    if(!city){
+        errors.city = "City is required"
+    }
+    if(!state){
+        errors.state = "State is required"
+    }
+    if(!country){
+        errors.country = "Country is required"
+    }
+    if(!lat){
+        errors.lat = "Latitude is not valid"
+    }
+    if(!lng){
+        errors.lng = "Longititude is not valid"
+    }
+    if(!name){
+        errors.name = "Name must be less than 50 characters"
+    }
+    if(!description){
+        errors.description = "Description is required"
+    }
+    if(!price){
+        errors.price = "Price per day is required"
+    }
+    if(Object.keys(errors).length > 0){
+        return res.status(400).json({message: "Validation Error", statusCode: 400, errors: errors})
+    }else{
+        newSpot = await Spot.create({
+            ownerId: user.id,
+            address:address,
+            city:city,
+            state:state,
+            country: country,
+            lat:lat,
+            lng:lng,
+            name:name,
+            description:description,
+            price:price
+        })
+
+        return res.status(201).json(newSpot)
+    }
 })
 module.exports = router;
