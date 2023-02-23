@@ -3,17 +3,7 @@ const router = express.Router();
 const { Spot, User, SpotImage, Review, ReviewImage,Booking, sequelize} = require('../../db/models')
 const { Op } = require("sequelize");
 router.get('', async (req, res)=> {
-    let spots = await Spot.findAll({
-        // include:{
-        // model: SpotImage,
-        // // as: "previewImage",
-        // attributes: ['url'],
-        // where:{
-        //     preview: true
-        // }
-        // },
-        // order:[[SpotImage, 'preview', 'DESC']]
-    })
+    let spots = await Spot.findAll({})
     let spotsArr = []
     spots.forEach((spot)=> spotsArr.push(spot.toJSON()))
     for(let i = 0; i < spotsArr.length; i++){
@@ -39,4 +29,26 @@ router.get('', async (req, res)=> {
     return res.json(payload)
 })
 
+router.get('/:id', async(req, res)=>{
+    let spot = await Spot.findOne({
+        where:{
+            id: req.params.id
+        },
+        include:[{
+            model: SpotImage,
+            attributes:{
+                exclude:['createdAt', 'updatedAt', 'spotId']
+            }
+        },{
+            model: User,
+            attributes:{
+                exclude:['hashedPassword', 'createdAt', 'updatedAt', 'username']
+            }
+        }
+        ]
+    })
+
+    let spotJSON = spot.toJSON()
+    return res.status(200).json(spotJSON)
+})
 module.exports = router;
