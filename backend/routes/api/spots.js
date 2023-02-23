@@ -65,14 +65,14 @@ router.get('/:id', async(req, res)=>{
         ]
     })
 
-    console.log(rating)
+    
 
 
     spotJSON.avgStarRating = rating[0].dataValues.avgRating
     spotJSON.numReviews = rating[0].dataValues.numRatings
     spotJSON.Owner = spotJSON.User
     delete spotJSON.User
-    
+
     return res.status(200).json(spotJSON)
 })
 module.exports = router;
