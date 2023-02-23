@@ -42,13 +42,37 @@ router.get('/:id', async(req, res)=>{
         },{
             model: User,
             attributes:{
-                exclude:['hashedPassword', 'createdAt', 'updatedAt', 'username']
+                exclude:['hashedPassword', 'createdAt', 'updatedAt', 'username', 'email']
             }
         }
         ]
     })
-
+    if(!spot){
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
     let spotJSON = spot.toJSON()
+
+    let rating = await Review.findAll({
+        where:{
+        spotId: spotJSON.id
+        },
+        attributes: [
+        [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating'],
+        [sequelize.fn('COUNT', sequelize.col('stars')), 'numRatings']
+        ]
+    })
+
+    console.log(rating)
+
+
+    spotJSON.avgStarRating = rating[0].dataValues.avgRating
+    spotJSON.numReviews = rating[0].dataValues.numRatings
+    spotJSON.Owner = spotJSON.User
+    delete spotJSON.User
+    
     return res.status(200).json(spotJSON)
 })
 module.exports = router;
