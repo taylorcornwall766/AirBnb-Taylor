@@ -57,9 +57,6 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
             [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
         })
-        // console.log(rating)
-        // console.log('1/1//1/1/1/1//1/1/1')
-        // console.log(rating[0].dataValues.avgRating)
         spot.avgRating = rating[0].dataValues.avgRating
 
         let previewImage = await SpotImage.findOne({
@@ -70,9 +67,6 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
         })
         spot.previewImage = previewImage.dataValues.url
     }
-
-
-
 
     return res.status(200).json({Spots: spotsArr})
 })
@@ -191,6 +185,65 @@ router.post('', requireAuth, restoreUser, async(req, res) =>{
 
         return res.status(201).json(newSpot)
     }
+})
+
+router.put('/:spotId', requireAuth, restoreUser, async(req, res)=>{
+    const user = req.user.id
+    let spot = await Spot.findOne({where:{id:req.params.spotId}})
+
+    if(!spot || spot.ownerId !== user){
+        res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+          })
+    }
+    const {address, city, state, lat, lng,
+        name, description, price, country} = req.body
+ let errors = {}
+ if(!address){
+     errors.address = "Street address is required"
+ }
+ if(!city){
+     errors.city = "City is required"
+ }
+ if(!state){
+     errors.state = "State is required"
+ }
+ if(!country){
+     errors.country = "Country is required"
+ }
+ if(!lat){
+     errors.lat = "Latitude is not valid"
+ }
+ if(!lng){
+     errors.lng = "Longititude is not valid"
+ }
+ if(!name || name.length>49){
+     errors.name = "Name must be less than 50 characters"
+ }
+ if(!description){
+     errors.description = "Description is required"
+ }
+ if(!price){
+     errors.price = "Price per day is required"
+ }
+ if(Object.keys(errors).length > 0){
+     return res.status(400).json({message: "Validation Error", statusCode: 400, errors: errors})
+ }else{
+      await spot.update({
+         address:address,
+         city:city,
+         state:state,
+         country: country,
+         lat:lat,
+         lng:lng,
+         name:name,
+         description:description,
+         price:price,
+         updatedAt: new Date()
+     })
+     return res.status(200).json(spot)
+ }
 })
 
 module.exports = router;
