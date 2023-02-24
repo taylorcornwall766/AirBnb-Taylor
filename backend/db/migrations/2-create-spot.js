@@ -13,13 +13,14 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        onDelete: "CASCADE"
+        // onDelete: "CASCADE"
       },
       ownerId: {
         type: Sequelize.INTEGER,
         references:{
           model: 'Users'
-        }
+        },
+        onDelete: "CASCADE"
       },
       address: {
         type: Sequelize.STRING,

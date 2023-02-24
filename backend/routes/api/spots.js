@@ -30,6 +30,70 @@ router.get('', async (req, res)=> {
     return res.json(payload)
 })
 
+
+router.get('/current', requireAuth, restoreUser, async(req, res) =>{
+    let spots = await Spot.findAll({
+        where:{
+            id: req.user.id
+        }
+    })
+    if(!spots){
+        return res.status(404).json({
+            "message": "Current user has no spots!",
+            "statusCode": 404
+        })
+    }
+    let spotsArr = []
+    spots.forEach((spot)=> spotsArr.push(spot.toJSON()))
+
+    for(let i = 0; i < spotsArr.length; i++){
+        spot = spotsArr[i]
+
+        let rating = await Review.findAll({
+            where:{
+            spotId: spot.id
+            },
+            attributes: [
+            [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
+            ]
+        })
+        // console.log(rating)
+        // console.log('1/1//1/1/1/1//1/1/1')
+        // console.log(rating[0].dataValues.avgRating)
+        spot.avgRating = rating[0].dataValues.avgRating
+
+        let previewImage = await SpotImage.findOne({
+            where:{
+                spotId: spot.id,
+                preview: true,
+            }
+        })
+        spot.previewImage = previewImage.dataValues.url
+    }
+
+
+
+
+    return res.status(200).json({Spots: spotsArr})
+})
+
+router.delete('/:id', requireAuth, restoreUser, async(req, res)=>{
+    const currentUser = req.user.id
+    let deleteSpot = await Spot.findOne({where:{id: req.params.id}})
+    if( !deleteSpot ||deleteSpot.ownerId !== currentUser){
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+          })
+    }else{
+        await Spot.destroy({where:{id: req.params.id}})
+        return res.status(200).json({
+            "message": "Successfully deleted",
+            "statusCode": 200
+          })
+    }
+})
+
 router.get('/:id', async(req, res)=>{
     let spot = await Spot.findOne({
         where:{
@@ -128,6 +192,5 @@ router.post('', requireAuth, restoreUser, async(req, res) =>{
         return res.status(201).json(newSpot)
     }
 })
-
 
 module.exports = router;
