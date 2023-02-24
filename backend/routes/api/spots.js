@@ -100,7 +100,7 @@ router.post('', requireAuth, restoreUser, async(req, res) =>{
     if(!lng){
         errors.lng = "Longititude is not valid"
     }
-    if(!name){
+    if(!name || name.length>49){
         errors.name = "Name must be less than 50 characters"
     }
     if(!description){
