@@ -128,4 +128,6 @@ router.post('', requireAuth, restoreUser, async(req, res) =>{
         return res.status(201).json(newSpot)
     }
 })
+
+
 module.exports = router;
