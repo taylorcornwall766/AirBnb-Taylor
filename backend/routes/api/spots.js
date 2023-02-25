@@ -30,6 +30,30 @@ router.get('', async (req, res)=> {
     return res.json(payload)
 })
 
+router.get('/:spotId/reviews', async(req, res) =>{
+    let reviews = await Review.findAll({
+        where:{
+            spotId: req.params.spotId
+        },
+        include:[
+            {model: User,
+            attributes:{
+                exclude:['username','email', 'hashedPassword', 'updatedAt','createdAt' ]
+            }},
+            {model: ReviewImage,
+            attributes:{
+                exclude:['createdAt','updatedAt','reviewId']
+            }}
+        ]
+    })
+    if(!reviews.length){
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+        })
+    }
+    return res.status(200).json({Reviews:reviews})
+})
 
 router.get('/current', requireAuth, restoreUser, async(req, res) =>{
     let spots = await Spot.findAll({
@@ -74,12 +98,19 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
 router.delete('/:id', requireAuth, restoreUser, async(req, res)=>{
     const currentUser = req.user.id
     let deleteSpot = await Spot.findOne({where:{id: req.params.id}})
-    if( !deleteSpot ||deleteSpot.ownerId !== currentUser){
+    if( !deleteSpot){
         return res.status(404).json({
             "message": "Spot couldn't be found",
             "statusCode": 404
           })
-    }else{
+    }
+    if(deleteSpot.ownerId !== currentUser){
+        return res.status(404).json({
+            "message": "Forbidden",
+            "statusCode": 403
+          })
+    }
+    else{
         await Spot.destroy({where:{id: req.params.id}})
         return res.status(200).json({
             "message": "Successfully deleted",
@@ -191,7 +222,13 @@ router.put('/:spotId', requireAuth, restoreUser, async(req, res)=>{
     const user = req.user.id
     let spot = await Spot.findOne({where:{id:req.params.spotId}})
 
-    if(!spot || spot.ownerId !== user){
+    if(!spot ){
+        res.status(404).json({
+            "message": "Forbidden",
+            "statusCode": 403
+          })
+    }
+    if(spot.ownerId !== user){
         res.status(404).json({
             "message": "Spot couldn't be found",
             "statusCode": 404
