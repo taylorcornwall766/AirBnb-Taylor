@@ -80,4 +80,44 @@ router.post('/:reviewId/images', requireAuth, restoreUser, async(req, res)=> {
     delete newReviewImageJSON.reviewId
     return res.status(201).json(newReviewImageJSON)
 })
+
+router.put('/:reviewId', requireAuth, restoreUser, async(req, res)=>{
+    let {review, stars} = req.body;
+    let currentUser = req.user.id;
+    let currentReview = await Review.findOne({where:{id:req.params.reviewId}})
+    let currentReviewJSON = currentReview.toJSON()
+
+    if(currentReviewJSON.userId !== currentUser){
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+    if(!currentReview){
+        return res.status(404).json({
+            "message": "Review couldn't be found",
+            "statusCode": 404
+          })
+    }
+    let errors = {}
+    if(!review){
+        errors.review = "Review text is required"
+    }
+    if(!stars || stars > 5 || stars < 1){
+        errors.stars = "Stars must be an integer from 1 to 5"
+    }
+    if(Object.keys(errors).length){
+        return res.status(400).json({
+            message: "Validation error",
+            statusCode: 400,
+            errors: errors
+          })
+    }
+    await currentReview.update({
+        review: review,
+        stars: stars,
+        updatedAt: new Date()
+    })
+    return res.status(200).json(currentReview)
+})
 module.exports = router
