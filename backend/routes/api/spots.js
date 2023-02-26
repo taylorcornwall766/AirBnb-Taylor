@@ -58,7 +58,7 @@ router.get('/:spotId/reviews', async(req, res) =>{
 router.get('/current', requireAuth, restoreUser, async(req, res) =>{
     let spots = await Spot.findAll({
         where:{
-            id: req.user.id
+            ownerId: req.user.id
         }
     })
     if(!spots){
