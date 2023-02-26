@@ -120,4 +120,23 @@ router.put('/:reviewId', requireAuth, restoreUser, async(req, res)=>{
     })
     return res.status(200).json(currentReview)
 })
+
+router.delete('/:reviewId', requireAuth, restoreUser, async(req, res) =>{
+    let currentReview = await Review.findOne({where:{id:req.params.reviewId}})
+    if(!currentReview){
+        return res.status(404).json({
+            "message": "Review couldn't be found",
+            "statusCode": 404
+        })
+    }
+    let reviewJSON = currentReview.toJSON()
+    let currentUser = req.user.id
+    if(reviewJSON.userId !== currentUser){
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+})
+
 module.exports = router
