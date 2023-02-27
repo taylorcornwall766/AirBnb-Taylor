@@ -45,7 +45,7 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=> {
 })
 
 router.post('/:reviewId/images', requireAuth, restoreUser, async(req, res)=> {
-    let review = Review.findOne({where:{id: req.params.reviewId}})
+    let review = await Review.findOne({where:{id: req.params.reviewId}})
     if(!review){
         return res.status(404).json({
             message: "Review couldn't be found",
