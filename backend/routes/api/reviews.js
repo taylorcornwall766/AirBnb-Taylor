@@ -52,7 +52,7 @@ router.post('/:reviewId/images', requireAuth, restoreUser, async(req, res)=> {
             statusCode: 404
         })
     }
-    let postedImages = ReviewImage.findAll({where:{reviewId: req.params.reviewId}})
+    let postedImages = await ReviewImage.findAll({where:{reviewId: req.params.reviewId}})
     let {url} = req.body
     if(!url){
         res.status(403).json({
