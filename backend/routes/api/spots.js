@@ -13,6 +13,12 @@ router.get('', async (req, res)=> {
     if(!size || Number(size) > 20){
         size = 20
     }
+    if(page && Number(page) < 1){
+        errors.page = "Page must be greater than or equal to 1"
+    }
+    if(size && Number(size) < 1){
+        errors.size = "Size must be greater than or equal to 1"
+    }
     if(minPrice && Number(minPrice) < 0){
         errors.minPrice = "Minimum price must be greater than or equal to 0"
     }
