@@ -43,6 +43,13 @@ router.get('', async (req, res)=> {
     if(minLng && Number(minLng) > 180 || Number(minLng) < -180){
         errors.minLng = "Minimum longitude is invalid"
     }
+    if(Object.keys(errors).length){
+        return res.status(400).json({
+            "message": "Validation Error",
+            "statusCode": 400,
+            "errors": errors
+        })
+    }
     where.limit = size,
     where.offset = size * (page-1)
 
