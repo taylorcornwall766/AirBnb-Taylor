@@ -70,6 +70,57 @@ router.post('/:spotId/images', requireAuth, restoreUser, async(req, res) =>{
     return res.status(201).json(newSpotImageJSON)
 })
 
+router.post('/:spotId/bookings', requireAuth, restoreUser, async(req,res)=>{
+    
+})
+
+router.get('/:spotId/bookings',requireAuth,restoreUser ,async(req,res)=>{
+    let user = req.user.id;
+    let spot = await Spot.findOne({where:{id:req.params.spotId}})
+    spotJSON = spot.toJSON()
+    console.log(spotJSON)
+    console.log(spotJSON.ownerId)
+    console.log(user)
+    if(!spot){
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+          })
+    }
+    if(spotJSON.ownerId === user){
+        let bookings = await Booking.findAll({
+            where:{spotId: req.params.spotId},
+            attributes:{
+                exclude:['userId', 'createdAt', 'updatedAt', 'id']
+            },
+            include:[
+                {model: User,
+                attributes:{
+                        exclude:['username','email', 'hashedPassword', 'updatedAt','createdAt' ]
+                }}
+            ]
+        })
+        let bookingsArr = []
+        bookings.forEach((booking) =>{
+            bookingsArr.push(booking.toJSON())
+        })
+        return res.status(200).json({"Bookings": bookingsArr})
+    }else{
+        let bookings = await Booking.findAll({
+            where:{spotId: req.params.spotId,
+                    userId: user},
+            attributes:{
+                exclude:['userId', 'createdAt', 'updatedAt', 'id']
+            }
+        })
+        let bookingsArr = []
+        bookings.forEach((booking) =>{
+            bookingsArr.push(booking.toJSON())
+        })
+        return res.status(200).json({"Bookings": bookingsArr})
+    }
+})
+
 router.get('/:spotId/reviews', async(req, res) =>{
     let reviews = await Review.findAll({
         where:{

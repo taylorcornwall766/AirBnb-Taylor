@@ -52,4 +52,6 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
     return res.json({"Bookings": newArr})
 })
 
+
+
 module.exports = router
