@@ -152,7 +152,7 @@ router.post('/:spotId/images', requireAuth, restoreUser, async(req, res) =>{
     if(!url){
         errors.url = "URL REQUIRED"
     }
-    if(!preview){
+    if(preview === undefined || preview === null){
         errors.preview = "PREVIEW REQUIRED"
     }
     if(Object.keys(errors).length){
