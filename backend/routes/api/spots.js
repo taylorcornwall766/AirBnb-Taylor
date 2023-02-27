@@ -4,7 +4,97 @@ const { Spot, User, SpotImage, Review, ReviewImage,Booking, sequelize} = require
 const { Op } = require("sequelize");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js")
 router.get('', async (req, res)=> {
-    let spots = await Spot.findAll({})
+    let where = {}
+    let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
+    let errors = {}
+    if(!page || Number(page) > 10){
+        page = 1
+    }
+    if(!size || Number(size) > 20){
+        size = 20
+    }
+    if(minPrice && Number(minPrice) < 0){
+        errors.minPrice = "Minimum price must be greater than or equal to 0"
+    }
+    if(maxPrice && Number(maxPrice) < 0){
+        errors.maxPrice = "Maximum price must be greater than or equal to 0"
+    }
+    if(page && Number(page) < 1){
+        errors.page = "Page must be greater than or equal to 1"
+    }
+    if(size && Number(size) < 1){
+        errors.size = "Size must be greater than or equal to 1"
+    }
+    if(maxLat && Number(maxLat) > 90 || Number(maxLat) < -90){
+        errors.maxLat = "Maximum latitude is invalid"
+    }
+    if(minLat && Number(minLat) > 90 || Number(minLat) < -90){
+        errors.minLat = "Minimum latitude is invalid"
+    }
+    if(maxLng && Number(maxLng) > 180 || Number(maxLng) < -180){
+        errors.maxLng = "Maximum longitude is invalid"
+    }
+    if(minLng && Number(minLng) > 180 || Number(minLng) < -180){
+        errors.minLng = "Minimum longitude is invalid"
+    }
+    where.limit = size,
+    where.offset = size * (page-1)
+
+    if(minLat && maxLat){
+        where.where.lat = {
+             [Op.gte]: Number(minLat),
+             [Op.lte]: Number(maxLat)
+        }
+    }
+    else if(minLat && !maxLat){
+        where.where.lat = {
+            [Op.gte]: Number(minLat)
+        }
+    }
+    else if(!minLat && maxLat){
+        where.where.lat = {
+            [Op.lte]: Number(maxLat)
+        }
+    }
+
+
+    if(minLng && maxLng){
+        where.where.lng = {
+             [Op.gte]: Number(minLng),
+             [Op.lte]: Number(maxLng)
+        }
+    }
+    else if(minLng && !maxLng){
+        where.where.lng = {
+            [Op.gte]: Number(minLng)
+        }
+    }
+    else if(!minLng && maxLng){
+        where.where.lng = {
+            [Op.lte]: Number(maxLng)
+        }
+    }
+
+
+    if(minPrice && maxPrice){
+        where.where.price = {
+             [Op.gte]: Number(minPrice),
+             [Op.lte]: Number(maxPrice)
+        }
+    }
+    else if(minPrice && !maxPrice){
+        where.where.price = {
+            [Op.gte]: Number(minPrice)
+        }
+    }
+    else if(!minPrice && maxPrice){
+        where.where.price = {
+            [Op.lte]: Number(maxPrice)
+        }
+    }
+
+
+    let spots = await Spot.findAll(where)
     let spotsArr = []
     spots.forEach((spot)=> spotsArr.push(spot.toJSON()))
     for(let i = 0; i < spotsArr.length; i++){
@@ -26,7 +116,7 @@ router.get('', async (req, res)=> {
             spotsArr[i].previewImage = null
         }
     }
-    let payload = {spots: spotsArr}
+    let payload = {spots: spotsArr, page: page, size: size}
     return res.json(payload)
 })
 
@@ -359,10 +449,10 @@ router.post('', requireAuth, restoreUser, async(req, res) =>{
     if(!country){
         errors.country = "Country is required"
     }
-    if(!lat){
+    if(!lat || Number(lat) < -90 || Number(lat) > 90){
         errors.lat = "Latitude is not valid"
     }
-    if(!lng){
+    if(!lng || Number(lat) < -180 || Number(lat) > 180){
         errors.lng = "Longititude is not valid"
     }
     if(!name || name.length>49){
