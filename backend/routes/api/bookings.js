@@ -27,19 +27,29 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
     for(let i = 0; i < bookings.length; i++){
         bookingsArr.push(bookings[i].toJSON())
     }
+    let newArr = []
     for(let i = 0; i < bookingsArr.length; i++){
         let booking = bookingsArr[i]
         console.log(booking)
         let previewImage = await SpotImage.findOne({where:
             {spotId: booking.spotId,
-            preview: true}
+            preview: true
+        }
         })
-        console.log('/1/1/1/1//1/1')
-        console.log(previewImage)
-        console.log('/1/1/1/1//1/1')
-        booking.Spot
+        if(!previewImage){
+            booking.Spot.previewImage = null
+        }else{
+            previewImage = previewImage.toJSON()
+            booking.Spot.previewImage = previewImage.url
+        }
+        // console.log('/1/1/1/1//1/1')
+        // console.log(previewImage)
+        // console.log('/1/1/1/1//1/1')
+        // console.log(booking.Spot)
+        newArr.push(booking)
+
     }
-    return res.json({testing: "testing"})
+    return res.json({"Bookings": newArr})
 })
 
 module.exports = router
