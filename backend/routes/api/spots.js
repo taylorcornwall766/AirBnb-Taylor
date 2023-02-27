@@ -30,6 +30,46 @@ router.get('', async (req, res)=> {
     return res.json(payload)
 })
 
+router.post('/:spotId/images', requireAuth, restoreUser, async(req, res) =>{
+    let spot = await Spot.findOne({where:{id:req.params.spotId}})
+    if(!spot){
+        return res.status(404).json({
+            "message": "Spot couldn't be found",
+            "statusCode": 404
+          })
+    }
+    if(spot.ownerId !== req.user.id){
+        return res.status(404).json({
+            "message": "Forbidden",
+            "statusCode": 403
+          })
+    }
+    let {url, preview} = req.body
+    let errors = {}
+    if(!url){
+        errors.url = "URL REQUIRED"
+    }
+    if(!preview){
+        errors.preview = "PREVIEW REQUIRED"
+    }
+    if(Object.keys(errors).length){
+        return res.status(400).json({ERRORS:errors})
+    }
+
+    let newSpotImage = await SpotImage.create({
+        spotId: req.params.spotId,
+        url: url,
+        preview: preview
+    })
+
+
+    let newSpotImageJSON = newSpotImage.toJSON()
+    delete newSpotImageJSON.createdAt
+    delete newSpotImageJSON.updatedAt
+    delete newSpotImageJSON.spotId
+    return res.status(201).json(newSpotImageJSON)
+})
+
 router.get('/:spotId/reviews', async(req, res) =>{
     let reviews = await Review.findAll({
         where:{
@@ -61,7 +101,7 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
             ownerId: req.user.id
         }
     })
-    if(!spots){
+    if(!spots.length){
         return res.status(404).json({
             "message": "Current user has no spots!",
             "statusCode": 404
@@ -81,6 +121,7 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
             [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
         })
+        console.log(rating[0].dataValues)
         spot.avgRating = rating[0].dataValues.avgRating
 
         let previewImage = await SpotImage.findOne({
@@ -89,7 +130,11 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
                 preview: true,
             }
         })
-        spot.previewImage = previewImage.dataValues.url
+        if(previewImage){
+            spot.previewImage = previewImage[0].dataValues.url
+        }else{
+            spot.previewImage = null
+        }
     }
 
     return res.status(200).json({Spots: spotsArr})
@@ -224,14 +269,14 @@ router.put('/:spotId', requireAuth, restoreUser, async(req, res)=>{
 
     if(!spot ){
         res.status(404).json({
-            "message": "Forbidden",
-            "statusCode": 403
+            "message": "Spot couldn't be found",
+            "statusCode": 404
           })
     }
     if(spot.ownerId !== user){
         res.status(404).json({
-            "message": "Spot couldn't be found",
-            "statusCode": 404
+            "message": "Forbidden",
+            "statusCode": 403
           })
     }
     const {address, city, state, lat, lng,
