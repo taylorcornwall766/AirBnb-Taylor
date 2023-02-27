@@ -50,64 +50,65 @@ router.get('', async (req, res)=> {
             "errors": errors
         })
     }
-    where.limit = size,
-    where.offset = size * (page-1)
+    let query = {}
+    query.limit = size
+    query.offset = size * (page-1)
 
     if(minLat && maxLat){
-        where.where.lat = {
+        where.lat = {
              [Op.gte]: Number(minLat),
              [Op.lte]: Number(maxLat)
         }
     }
     else if(minLat && !maxLat){
-        where.where.lat = {
+        where.lat = {
             [Op.gte]: Number(minLat)
         }
     }
     else if(!minLat && maxLat){
-        where.where.lat = {
+        where.lat = {
             [Op.lte]: Number(maxLat)
         }
     }
 
 
     if(minLng && maxLng){
-        where.where.lng = {
+        where.lng = {
              [Op.gte]: Number(minLng),
              [Op.lte]: Number(maxLng)
         }
     }
     else if(minLng && !maxLng){
-        where.where.lng = {
+        where.lng = {
             [Op.gte]: Number(minLng)
         }
     }
     else if(!minLng && maxLng){
-        where.where.lng = {
+        where.lng = {
             [Op.lte]: Number(maxLng)
         }
     }
 
 
     if(minPrice && maxPrice){
-        where.where.price = {
+        where.price = {
              [Op.gte]: Number(minPrice),
              [Op.lte]: Number(maxPrice)
         }
     }
     else if(minPrice && !maxPrice){
-        where.where.price = {
+        where.price = {
             [Op.gte]: Number(minPrice)
         }
     }
     else if(!minPrice && maxPrice){
-        where.where.price = {
+        where.price = {
             [Op.lte]: Number(maxPrice)
         }
     }
 
 
-    let spots = await Spot.findAll(where)
+    let spots = await Spot.findAll({where,limit:query.limit, offset:query.offset})
     let spotsArr = []
     spots.forEach((spot)=> spotsArr.push(spot.toJSON()))
     for(let i = 0; i < spotsArr.length; i++){
