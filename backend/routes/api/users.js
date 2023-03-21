@@ -29,8 +29,8 @@ router.post(
     validateSignup,
     async (req, res) => {
       const { email, password, username, firstName, lastName } = req.body;
-      let oldUser = User.findOne({where:{username:username}})
-      let oldUser2 = User.findOne({where:{email:email}})
+      let oldUser = await User.findOne({where:{username:username}})
+      let oldUser2 = await User.findOne({where:{email:email}})
       let errors = {}
       if(oldUser2){
         errors.email = "User with that email already exists"
@@ -38,6 +38,9 @@ router.post(
       if(oldUser){
         errors.username = "User with that username already exists"
       }
+      console.log(errors)
+      console.log(oldUser)
+      console.log(oldUser2)
       if(Object.keys(errors).length){
         return res.status(403).json({
           "message": "User already exists",
