@@ -45,11 +45,21 @@ router.get('/current', requireAuth, restoreUser, async(req, res)=> {
 })
 
 router.post('/:reviewId/images', requireAuth, restoreUser, async(req, res)=> {
-    let review = await Review.findOne({where:{id: req.params.reviewId}})
+    let review = await Review.findOne({where:{
+        id: req.params.reviewId,
+    }})
+    // console.log(review.dataValues)
+    // return res.json({check:"check"})
     if(!review){
         return res.status(404).json({
             message: "Review couldn't be found",
             statusCode: 404
+        })
+    }
+    if(review.dataValues.userId !== req.user.id){
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
         })
     }
     let postedImages = await ReviewImage.findAll({where:{reviewId: req.params.reviewId}})
@@ -85,20 +95,20 @@ router.put('/:reviewId', requireAuth, restoreUser, async(req, res)=>{
     let {review, stars} = req.body;
     let currentUser = req.user.id;
     let currentReview = await Review.findOne({where:{id:req.params.reviewId}})
-    let currentReviewJSON = currentReview.toJSON()
-
-    if(currentReviewJSON.userId !== currentUser){
-        return res.status(403).json({
-            message: "Forbidden",
-            statusCode: 403
-        })
-    }
     if(!currentReview){
         return res.status(404).json({
             "message": "Review couldn't be found",
             "statusCode": 404
           })
     }
+    let currentReviewJSON = currentReview.toJSON()
+    if(currentReviewJSON.userId !== currentUser){
+        return res.status(403).json({
+            message: "Forbidden",
+            statusCode: 403
+        })
+    }
+
     let errors = {}
     if(!review){
         errors.review = "Review text is required"

@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { Spot, User, SpotImage, Review, ReviewImage,Booking, sequelize} = require('../../db/models')
 const { Op } = require("sequelize");
-const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js")
+const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth.js");
+const e = require("express");
 router.get('', async (req, res)=> {
     let where = {}
     let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
@@ -356,8 +357,12 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
             [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
         })
-        console.log(rating[0].dataValues)
-        spot.avgRating = rating[0].dataValues.avgRating
+        if(rating[0].dataValues.avgRating === null){
+
+            spot.avgRating = null
+        }else{
+            spot.avgRating = rating[0].dataValues.avgRating
+        }
 
         let previewImage = await SpotImage.findOne({
             where:{
@@ -569,9 +574,20 @@ router.post('/:spotId/reviews', requireAuth, restoreUser, async(req, res) => {
         "message": "Spot couldn't be found",
         "statusCode": 404
       })
-    console.log(req.body)
-    console.log(req.body.stars)
-    console.log(typeof req.body.stars)
+    // console.log(req.body)
+    // console.log(req.body.stars)
+    // console.log(typeof req.body.stars)
+    let oldReview = await Review.findOne({where:{
+        userId: req.user.id,
+        spotId: req.params.spotId
+    }})
+    console.log(oldReview)
+    if(oldReview){
+        return res.status(403).json({
+            "message": "User already has a review for this spot",
+            "statusCode": 403
+        })
+    }
     let {review, stars} = req.body
     let errors = {}
     if(!review){
