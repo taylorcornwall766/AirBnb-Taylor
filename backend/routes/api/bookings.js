@@ -30,7 +30,7 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
     let newArr = []
     for(let i = 0; i < bookingsArr.length; i++){
         let booking = bookingsArr[i]
-        console.log(booking)
+        // console.log(booking)
         let previewImage = await SpotImage.findOne({where:
             {spotId: booking.spotId,
             preview: true

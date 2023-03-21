@@ -185,12 +185,12 @@ router.post('/:spotId/bookings', requireAuth, restoreUser, async(req,res)=>{
           })
     }
     let spotJSON = spot.toJSON()
-    if(spotJSON.ownerId === req.user.id){
-        return res.status(404).json({
-            "message": "Forbidden, Cannot book your own spot",
-            "statusCode": 400
-        })
-    }
+    // if(spotJSON.ownerId === req.user.id){
+    //     return res.status(404).json({
+    //         "message": "Forbidden, Cannot book your own spot",
+    //         "statusCode": 400
+    //     })
+    // }
 
     let {startDate, endDate} = req.body
     let errors = {}
@@ -263,9 +263,9 @@ router.get('/:spotId/bookings',requireAuth,restoreUser ,async(req,res)=>{
     let user = req.user.id;
     let spot = await Spot.findOne({where:{id:req.params.spotId}})
     spotJSON = spot.toJSON()
-    console.log(spotJSON)
-    console.log(spotJSON.ownerId)
-    console.log(user)
+    // console.log(spotJSON)
+    // console.log(spotJSON.ownerId)
+    // console.log(user)
     if(!spot){
         return res.status(404).json({
             "message": "Spot couldn't be found",
@@ -581,7 +581,7 @@ router.post('/:spotId/reviews', requireAuth, restoreUser, async(req, res) => {
         userId: req.user.id,
         spotId: req.params.spotId
     }})
-    console.log(oldReview)
+    // console.log(oldReview)
     if(oldReview){
         return res.status(403).json({
             "message": "User already has a review for this spot",

@@ -16,7 +16,7 @@ router.delete("/:imageId", requireAuth, restoreUser, async (req, res) =>{
     let review = await Review.findOne({where:{id:deleteImageJSON.reviewId}})
     // let currentUser = req.user.id
     if(review.userId !== req.user.id){
-        console.log(review.toJSON())
+        // console.log(review.toJSON())
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
