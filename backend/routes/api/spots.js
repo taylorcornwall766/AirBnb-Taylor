@@ -357,8 +357,7 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
             [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
         })
-        if(rating[0].dataValues.avgRating === null){
-
+        if(!rating[0]){
             spot.avgRating = null
         }else{
             spot.avgRating = rating[0].dataValues.avgRating
