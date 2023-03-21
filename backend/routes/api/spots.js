@@ -345,11 +345,16 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
     }
     let spotsArr = []
     spots.forEach((spot)=> spotsArr.push(spot.toJSON()))
-
+    if(!spotsArr.length){
+        return res.status(404).json({
+            "message": "Current user has no spots!",
+            "statusCode": 404
+        })
+    }
     for(let i = 0; i < spotsArr.length; i++){
         spot = spotsArr[i]
 
-        let rating = await Review.findAll({
+        let rating = await Review.findOne({
             where:{
             spotId: spot.id
             },
@@ -357,10 +362,12 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
             [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
             ]
         })
-        if(!rating[0]){
+        let ratingJSON = rating.toJSON()
+        // console.log(ratingJSON)
+        if(!ratingJSON.avgRating){
             spot.avgRating = null
         }else{
-            spot.avgRating = rating[0].dataValues.avgRating
+            spot.avgRating = ratingJSON.avgRating
         }
 
         let previewImage = await SpotImage.findOne({
@@ -369,10 +376,12 @@ router.get('/current', requireAuth, restoreUser, async(req, res) =>{
                 preview: true,
             }
         })
-        if(previewImage){
-            spot.previewImage = previewImage[0].dataValues.url
-        }else{
+        if(!previewImage){
             spot.previewImage = null
+        }else{
+        let previewImageJSON = previewImage.toJSON()
+        // console.log(previewImageJSON)
+            spot.previewImage = previewImageJSON.url
         }
     }
 
