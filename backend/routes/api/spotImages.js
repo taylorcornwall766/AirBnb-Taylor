@@ -14,7 +14,12 @@ router.delete("/:imageId", requireAuth, restoreUser, async (req, res) =>{
     }
     let deleteImageJSON = deleteImage.toJSON()
     // let currentUser = req.user.id
-    if(deleteImageJSON.userId !== req.user.id){
+    console.log(deleteImageJSON)
+    let imageSpot = await Spot.findOne({where:{id: deleteImageJSON.spotId}})
+    let imageSpotJSON = imageSpot.toJSON()
+    console.log(imageSpotJSON)
+
+    if(imageSpotJSON.ownerId !== req.user.id){
         return res.status(403).json({
             message: "Forbidden",
             statusCode: 403
