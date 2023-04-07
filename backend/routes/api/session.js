@@ -43,6 +43,8 @@ router.delete("/", (_req, res) => {
 router.get('/', restoreUser, (req, res) => {
       const { user } = req;
       if (user) {
+        delete user[createdAt]
+        delete user[updatedAt]
         return res.json({
           user: user
         });
