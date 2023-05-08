@@ -38,9 +38,9 @@ router.post(
       if(oldUser){
         errors.username = "User with that username already exists"
       }
-      console.log(errors)
-      console.log(oldUser)
-      console.log(oldUser2)
+      // console.log(errors)
+      // console.log(oldUser)
+      // console.log(oldUser2)
       if(Object.keys(errors).length){
         return res.status(403).json({
           "message": "User already exists",

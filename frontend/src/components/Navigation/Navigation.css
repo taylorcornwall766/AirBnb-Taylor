@@ -1,0 +1,13 @@
+.link{
+    margin-right: 10px;
+}
+.navBar{
+    background-color: lightgray;
+    margin-top: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.hidden{
+    display: none;
+}
