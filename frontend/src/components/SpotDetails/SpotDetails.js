@@ -7,6 +7,14 @@ const SpotDetails = () => {
     const {spotId} = useParams()
     const spot = useSelector((state) => state.spots.singleSpot)
     const dispatch = useDispatch();
+    const {
+        name,
+        city,
+        state,
+        country,
+    } = spot
+
+    const images = Object.values(spot.SpotImages)
 
     const ReserveButtonClick = () => {
         alert("Feature Coming Soon...")
@@ -19,9 +27,10 @@ const SpotDetails = () => {
         // console.log("spot: ", spot)
         return (
             <div className="details-container" id={`spot-details-${spotId}`}>
-                <h2 className="spot-name"></h2>
-                <p className="spot-location"></p>
+                <h2 className="spot-name">{name}</h2>
+                <p className="spot-location">{`${city}, ${state}, ${country}`}</p>
                 <div className="images-container">
+                    {/* need to add all images */}
                     <img src="" className="previewImage"></img>
                     <img src="" className="spotImage" id="image-1"></img>
                     <img src="" className="spotImage" id="image-2"></img>
