@@ -5,12 +5,13 @@ const SpotsIndexItem = ({ spot, id,  }) => {
     let ratingComponent;
     // console.log("typeof spot.avgRating: ",typeof spot.avgRating)
     // console.log("spot.avgRating: ",spot.avgRating)
-    if(typeof spot.avgRating === 'number'){
+    //                                       FOR DEVELOPMENT
+    if(typeof spot.avgRating === 'string' || typeof spot.avgRating === 'number'){
         // console.log("spot.avgRating123: ",spot.avgRating)
         ratingComponent = (
             <>
             <i class="fa-solid fa-star rating"></i>
-            <p className="rating">{spot.avgRating.toFixed(2)}</p>
+            <p className="rating">{Number(spot.avgRating).toFixed(2)}</p>
             </>
         )
     }else{
