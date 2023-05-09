@@ -1,0 +1,35 @@
+.spot-item-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width:23%;
+    margin-left: 1rem;
+}
+
+.spot-item-container > img{
+    /* background-color: blue;*/
+
+     width: 100%;
+}
+
+
+.rating-container{
+    display: inline-flex;
+    /* vertical-align:middle; */
+    /* justify-content: space-around; */
+}
+.state-rating-container{
+    display: flex;
+    justify-content: space-between;
+}
+.rating{
+    margin:0;
+    margin-top: 5px;
+}
+
+.city-state{
+    width:fit-content;
+    display:inline;
+    margin: 0;
+    margin-top: 5px;
+}

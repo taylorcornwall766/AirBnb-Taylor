@@ -10,15 +10,19 @@ const getAllSpots = (spots) => {
 }
 
 export const loadSpotsThunk = () => async(dispatch) =>{
+    console.log("loadSpotsThunk", "1")
     const response = await fetch("/api/spots")
     const data = await response.json()
-    // console.log(data.spots)
-    const normalSpots = {}
-    data.spots.forEach((spot) => {
-        normalSpots[spot.id] = spot
-    })
-    dispatch(getAllSpots(normalSpots))
-    return normalSpots
+    if(response.ok){
+        // console.log(data.spots)
+        const normalSpots = {}
+        data.spots.forEach((spot) => {
+            normalSpots[spot.id] = spot
+        })
+        dispatch(getAllSpots(normalSpots))
+        return normalSpots
+    }
+    return null
 }
 
 const initialState = {allSpots: null, singleSpot: null};
