@@ -21,6 +21,7 @@ const SpotsIndex = () => {
 
                             <SpotsIndexItem
                             spot={spot}
+                            key={`spot-index-item-key-${spot.id}`}
                             id={`spot-index-item-${spot.id}`}
                             className={'spot-index-item'}
                             />

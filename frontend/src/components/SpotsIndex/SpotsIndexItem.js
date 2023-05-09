@@ -15,7 +15,7 @@ const SpotsIndexItem = ({ spot, id,  }) => {
         // console.log("spot.avgRating123: ",spot.avgRating)
         ratingComponent = (
             <>
-            <i class="fa-solid fa-star rating"></i>
+            <i className="fa-solid fa-star rating"></i>
             <p className="rating">{Number(spot.avgRating).toFixed(2)}</p>
             </>
         )
