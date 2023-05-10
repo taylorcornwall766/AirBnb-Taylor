@@ -30,36 +30,50 @@ const SpotDetails = () => {
             avgStarRating,
             numReviews
         } = spot
-        console.log(numReviews)
+        // console.log(numReviews)
         const imagesArr = Object.values(spot.SpotImages)
         // console.log("spot: ", spot)
+        console.log(imagesArr)
 
         // rendering all of our images
+        let previewImageFound = false
         for(let i = 0; i < 5; i++){
             // set our current place in the images Arr to img variable
             let imagesArrImage = imagesArr[i]
             // console.log(imagesArrImage)
             // so that we dont create two preview image components
-            let previewImageFound = false
             if(imagesArrImage){
+                if(i === 4 && !previewImageFound){
+                    imagesArr[4] = (
+                        <img key={`image-${imagesArrImage.id}-db`} src={imagesArrImage.url} className="previewImage"></img>
+                    )
+                    break
+                }
                 if(imagesArrImage.preview && !previewImageFound){
                     previewImageFound = true
                     // our preview image component
                     imagesArr[i] = (
-                        <img src={imagesArrImage.url} className="previewImage"></img>
+                        <img key={`image-${imagesArrImage.id}-db`} src={imagesArrImage.url} className="previewImage"></img>
                     )
                 }else{
                     imagesArr[i] = (
-                        <img src={imagesArrImage.url} className="spotImage" id={`image-${i}`}></img>
+                        <img key={`image-${imagesArrImage.id}-db`} src={imagesArrImage.url} className="spotImage"></img>
                     )
                 }
             }else{
                 // setting a default image if there arent enough images for the given spot
+                if(i === 4 && !previewImageFound){
+                    imagesArr[4] = (
+                        <img key={`image-${[i]}-filler`} src={`https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwaG91c2V8ZW58MHx8MHx8&w=1000&q=80`} className="previewImage"></img>
+                    )
+                    break
+                }
                 imagesArr[i] = (
-                    <img src={`https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwaG91c2V8ZW58MHx8MHx8&w=1000&q=80`} className="spotImage" id={`image-${i}`}></img>
+                    <img key={`image-${[i]}-filler`} src={`https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwaG91c2V8ZW58MHx8MHx8&w=1000&q=80`} className="spotImage" id={`image-${i}`}></img>
                 )
             }
         }
+        console.log("testing images arr: ",imagesArr)
         return (
             <div className="details-container" id={`spot-details-${spotId}`}>
                 <h2 className="spot-name">{name}</h2>

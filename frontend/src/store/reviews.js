@@ -7,11 +7,16 @@ const getSpotReviews = (spotReviews) => {
     }
 }
 
-const loadSpotReviewsThunk = (spotId) => async(dispatch)=>{
+export const loadSpotReviewsThunk = (spotId) => async(dispatch)=>{
    const response = await fetch(`/api/spots/${spotId}/reviews`)
    const data = await response.json()
    if(response.ok){
-    dispatch(getSpotReviews)
+    console.log(data)
+    const normalReviews = {}
+    data.Reviews.forEach((review) => {
+        normalReviews[review.id] = review
+    })
+    dispatch(getSpotReviews(normalReviews))
    }
    return data
 }

@@ -26,6 +26,10 @@ function App() {
           <Route path="/spots/:spotId">
             <SpotDetails></SpotDetails>
           </Route>
+
+          <Route path="/spots/new">
+            
+          </Route>
         </Switch>}
     </>
   );
