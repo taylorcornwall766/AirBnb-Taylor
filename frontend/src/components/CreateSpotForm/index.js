@@ -12,16 +12,36 @@ function CreateSpotForm(){
     const [latitude, setLatitude] = useState("")
     const [longitude, setLongitude] = useState("")
     const [description, setDescription] = useState("")
-    const [title, setTitle] = useState("")
+    const [name, setName] = useState("")
     const [price, setPrice] = useState("")
     const [previewImageUrl, setPreviewImageUrl] = useState("")
     const [image1Url, setImage1Url] = useState("")
     const [image2Url, setImage2Url] = useState("")
     const [image3Url, setImage3Url] = useState("")
     const [image4Url, setImage4Url] = useState("")
+
     const errors = {}
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        if(!country.length){
+            errors.country = "Country is required"
+        }
+        if(!address.length){
+            errors.address = "Address is required"
+        }
+        if(!city.length){
+            errors.city = "City is required"
+        }
+        if(!state.length){
+            errors.state = "State is required"
+        }
+        if(description.length < 30){
+            errors.description = "Description needs a minimum of 30 characters"
+        }
+        if(!name.length){
+            errors.name = "Name is required"
+        }
 
     }
 
@@ -102,8 +122,8 @@ function CreateSpotForm(){
                     </p>
                     <input
                     type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                     />
                 </label>
@@ -125,7 +145,7 @@ function CreateSpotForm(){
                     <p>
                     Submit a link to at least one photo to publish your spot.
                     </p>
-                    
+
                     <input
                     type="text"
                     value={previewImageUrl}
