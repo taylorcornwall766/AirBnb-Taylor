@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadSpotDetailsThunk } from "../../store/spots";
 import { useParams } from "react-router-dom";
+import "./SpotDetails.css"
 
 const SpotDetails = () => {
     const {spotId} = useParams()
@@ -72,22 +73,24 @@ const SpotDetails = () => {
                     <p className="description-info">{description}</p>
                     <div className="reserve-container">
                         <h3 className="price">{`$${price} night`}</h3>
-                        <div className="rating-container">
-                            <div className="avg-rating-container">
-                            <i className="fa-solid fa-star rating"></i>
-                            <h3 className="avg-rating">{avgStarRating}</h3>
+                        <div className="rating-container small">
+                            <div className="avg-rating-container small">
+                            <i className="fa-solid fa-star rating small"></i>
+                            <h3 className="avg-rating small">{avgStarRating}</h3>
                             </div>
-                            <h3 className="num-reviews">{`${numReviews} reviews`}</h3>
+                            <h3 className="num-reviews small">{`${numReviews} reviews`}</h3>
                         </div>
                         <button onClick={ReserveButtonClick}className="reserve-button">Reserve</button>
                     </div>
                 </div>
 
                 <div className="reviews-container">
-                    <div className="review-info-container">
-                        <i className="fa-solid fa-star rating"></i>
-                        <p className="avg-rating"></p>
-                        <p className="num-reviews">{`reviews`}</p>
+                    <div className="review-info-container big">
+                        <div className="avg-rating-container big">
+                            <i className="fa-solid fa-star rating big"></i>
+                            <h3 className="avg-rating big">{avgStarRating}</h3>
+                        </div>
+                        <h3 className="num-reviews big">{`${numReviews} reviews`}</h3>
                     </div>
                     {/* ADD REVIEWS MAP HERE*/}
                 </div>
