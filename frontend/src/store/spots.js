@@ -1,4 +1,5 @@
 import { csrfFetch } from "./csrf";
+// import {useHistory}
 
 const GET_ALL_SPOTS = "spots/getAllSpots"
 const GET_SPOT_DETAILS = "spots/getSpotDetails"
@@ -7,12 +8,12 @@ const DELETE_SPOT = "spots/deleteSpot"
 const EDIT_SPOT = "spots/editSpot"
 const GET_USER_SPOTS = "spots/getUserSpots"
 
-const getUserSpots = (spots) => {
-    return {
-        type: GET_USER_SPOTS,
-        payload: spots
-    }
-}
+// const getUserSpots = (spots) => {
+//     return {
+//         type: GET_USER_SPOTS,
+//         payload: spots
+//     }
+// }
 
 const getAllSpots = (spots) => {
     return {
@@ -53,6 +54,15 @@ const createNewSpot = (spot) => {
 
 export const loadUserSpotsThunk = (userId) => async(dispatch) =>{
     const response = await csrfFetch(`/api/spots/current`)
+    const data = await response.json()
+    if(response.ok){
+        const normalSpots = {}
+        data.spots.forEach((spot) => {
+            normalSpots[spot.id] = spot
+        })
+        dispatch(getAllSpots(normalSpots))
+        return normalSpots
+    }
 }
 
 export const loadSpotDetailsThunk = (spotId) => async(dispatch) =>{
@@ -84,32 +94,40 @@ export const loadSpotsThunk = () => async(dispatch) =>{
 export const createSpotThunk = (spot, spotImages) => async(dispatch) =>{
     console.log(spot)
     console.log(spotImages)
-    const response = await csrfFetch(`/api/spots`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(spot),
-      });
-    if(response.ok){
-        const spotData = await response.json()
-        console.log("spotData",spotData)
-        console.log("message", spotData.errors)
-        for(let i = 0; i < spotImages.length; i++){
-            const response = await csrfFetch(`/api/spots/${spotData.id}/images`, {
-                method: "post",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(spotImages[i]),
-              });
-            const imageData = await response.json()
-            console.log(imageData)
+    try{
+
+        const response = await csrfFetch(`/api/spots`, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(spot),
+        });
+        if(response.ok){
+            const spotData = await response.json()
+            console.log("spotData",spotData)
+            console.log("message", spotData.errors)
+            for(let i = 0; i < spotImages.length; i++){
+                const response = await csrfFetch(`/api/spots/${spotData.id}/images`, {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(spotImages[i]),
+                });
+                const imageData = await response.json()
+                console.log(imageData)
+            }
+            dispatch(createNewSpot(spotData))
+            return spotData
+        }else{
+            const data = await response.json()
+            console.log(data.message)
         }
-        dispatch(createNewSpot(spotData))
-    }else{
-        const data = await response.json()
-        console.log(data.message)
+
+    }catch(error){
+        const errors = await error.json()
+        return errors
     }
 }
 
@@ -143,7 +161,7 @@ export const editSpotThunk = (spot) => async(dispatch) =>{
     }
 }
 
-const initialState = {allSpots: null, singleSpot: null};
+const initialState = {allSpots: {}, singleSpot: {}};
 
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -166,7 +184,8 @@ const spotsReducer = (state = initialState, action) => {
     case POST_NEW_SPOT:{
         const newState = {...state}
         console.log(action.playload)
-        newState.allSpots[action.payload.id] = action.payload
+        // newState.allSpots[action.payload.spot.id] = action.payload.spot
+        newState.singleSpot = action.payload.spot
         return newState
     }
     default:

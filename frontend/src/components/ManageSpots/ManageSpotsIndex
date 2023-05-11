@@ -1,0 +1,38 @@
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loadSpotsThunk } from "../../store/spots";
+import SpotsIndexItem from "./SpotsIndexItem";
+import "./SpotsIndex.css"
+const ManageSpotsIndex = () => {
+    const spots = useSelector((state) => state.spots)
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch(loadSpotsThunk())
+    }, [dispatch])
+    if(spots.allSpots){
+        const spotsArray = Object.values(spots.allSpots)
+        // console.log("spotsArray", spotsArray)
+        return (
+            <div className="manage-spot-index" id="manage-spot-index">
+                    {
+                        spotsArray.map(spot => (
+
+
+                            <ManageSpotsIndexItem
+                            spot={spot}
+                            key={`manage-spot-index-item-key-${spot.id}`}
+                            id={`manage-spot-index-item-${spot.id}`}
+                            className={'manage-spot-index-item'}
+                            />
+                            )
+                    )}
+            </div>
+        )
+    }else{
+        return (null)
+    }
+
+}
+
+export default ManageSpotsIndex

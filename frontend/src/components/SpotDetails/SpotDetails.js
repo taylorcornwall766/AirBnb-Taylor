@@ -18,6 +18,9 @@ const SpotDetails = () => {
     useEffect(()=>{
         dispatch(loadSpotDetailsThunk(spotId))
     }, [dispatch])
+    if(!spot.SpotImages){
+        return null
+    }
     if(spot){
         const {
             name,

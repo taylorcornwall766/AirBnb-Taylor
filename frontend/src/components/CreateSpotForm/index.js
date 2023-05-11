@@ -2,16 +2,17 @@ import React, { useState } from "react";
 // import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 import { createSpotThunk } from "../../store/spots";
-
+import { useHistory } from "react-router-dom";
 function CreateSpotForm(){
+    const history = useHistory()
     const dispatch = useDispatch()
 
     const [country, setCountry] = useState("")
     const [streetAddress, setStreetAddress] = useState("")
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
-    const [latitude, setLatitude] = useState("")
-    const [longitude, setLongitude] = useState("")
+    const [latitude, setLatitude] = useState(1)
+    const [longitude, setLongitude] = useState(1)
     const [description, setDescription] = useState("")
     const [name, setName] = useState("")
     const [price, setPrice] = useState("")
@@ -22,41 +23,43 @@ function CreateSpotForm(){
     const [image4Url, setImage4Url] = useState("")
     const [errors, setErrors] = useState({})
     // const errors = {}
-    const handleSubmit = (e) => {
-        // console.log("previewImageUrl: ", previewImageUrl)
-        // console.log("previewImageUrl.length: ", previewImageUrl.length)
-        setErrors({})
-        console.log('asdf')
+    const handleSubmit = async(e) => {
+        console.log("previewImageUrl: ", previewImageUrl)
+        console.log("previewImageUrl.length: ", previewImageUrl.length)
+
+        // setErrors({})
+
+        const newErrors = {}
         e.preventDefault()
         console.log(!country.length)
         if(!country.length){
-            setErrors({...errors, country : (<p className="errors" value="Country is required">Country is required</p>)})
+            newErrors.country = "Country is required"
         }
         console.log("1 :", errors)
         if(!streetAddress.length){
-            setErrors({...errors, streetAddress: (<p className="errors" value="Address is required">Address is required</p>)})
+            newErrors.streetAddress = "Address is required"
         }
         console.log("2 :", errors)
         if(!city.length){
-            setErrors({...errors,city : <p className="errors" value="City is required">City is required</p>})
+            newErrors.city= "City is required"
         }
         console.log("3 :", errors)
         if(!state.length){
-            setErrors({...errors, state:(<p className="errors" value="State is required">State is required</p>)})
+            newErrors.state = "State is required"
         }
         if(description.length < 30){
-            setErrors({...errors, description:(<p className="errors" value="Description needs a minimum of 30 characters">Description needs a minimum of 30 characters</p>)})
+            newErrors.description = "Description needs a minimum of 30 characters"
         }
         if(!name.length){
-            setErrors({...errors,name : (<p className="errors" value="Name is required">Name is required</p>)})
+            newErrors.name = "Name is required"
         }
         if(!price.length){
-            setErrors({...errors,price : (<p className="errors" value="Price is required">Price is required</p>)})
+            newErrors.price = "Price is required"
         }
         if(!previewImageUrl.length){
-            setErrors({...errors, previewImageUrl: (<p className="errors" value="Preview image is required">Preview image is required</p>)})
+            newErrors.previewImageUrl = "Preview image is required"
         }
-
+        setErrors(newErrors)
         if(!Object.values(errors).length){
 
         }
@@ -68,20 +71,25 @@ function CreateSpotForm(){
             name: name,
             description: description,
             price: Number(price),
-            lat: 0,
-            lng: 0,
+            lat: 1,
+            lng: 1,
         }
-        if(latitude.length){
+        if(!latitude){
             newSpot.lat = Number(latitude)
         }
-        if(longitude.length){
+        if(!longitude){
             newSpot.lng = Number(longitude)
         }
         const spotImages = []
         console.log(newSpot)
         console.log("preview image url: ", previewImageUrl)
         if(!Object.values(errors).length){
-            dispatch(createSpotThunk(newSpot, spotImages))
+            const response = await dispatch(createSpotThunk(newSpot, spotImages))
+            if(response.id){
+                history.push(`/spots/${response.id}`)
+            }else{
+                
+            }
         }
         console.log('errors:   ',errors)
         // if(image1Url && image1Url.split('.')[image1Url.split('.').length-1])
@@ -99,7 +107,7 @@ function CreateSpotForm(){
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
                     />
-                    {errors.country}
+                    <p className="errors">{errors.country}</p>
                 </label>
                 <label>
                     Street Address
@@ -108,7 +116,7 @@ function CreateSpotForm(){
                     value={streetAddress}
                     onChange={(e) => setStreetAddress(e.target.value)}
                     />
-                    {errors.streetAddress}
+                    <p className="errors">{errors.streetAddress}</p>
                 </label>
                 <label>
                     City
@@ -117,7 +125,7 @@ function CreateSpotForm(){
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     />
-                    {errors.city}
+                    <p className="errors">{errors.city}</p>
                 </label>
                 <label>
                     State
@@ -126,9 +134,9 @@ function CreateSpotForm(){
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                     />
-                    {errors.state}
+                    <p className="errors">{errors.state}</p>
                 </label>
-                <label>
+                {/* <label>
                     Latitude
                     <input
                     type="text"
@@ -143,7 +151,7 @@ function CreateSpotForm(){
                     value={longitude}
                     onChange={(e) => setLongitude(e.target.value)}
                     />
-                </label>
+                </label> */}
                 <label>
                     <h3>Describe your place to guests</h3>
                     <p>
@@ -154,7 +162,7 @@ function CreateSpotForm(){
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     />
-                    {errors.description}
+                    <p className="errors">{errors.description}</p>
                 </label>
                 <label>
                     <h3>Create a title for your spot</h3>
@@ -166,7 +174,7 @@ function CreateSpotForm(){
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     />
-                    {errors.name}
+                    <p className="errors">{errors.title}</p>
                 </label>
                 <label>
                     <h3>Set a base price for your spot</h3>
@@ -179,7 +187,7 @@ function CreateSpotForm(){
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     />
-                    {errors.price}
+                    <p className="errors">{errors.price}</p>
                 </label>
                 <label>
                     <h3>Liven up your spot with photos</h3>
@@ -192,7 +200,7 @@ function CreateSpotForm(){
                     value={previewImageUrl}
                     onChange={(e) => setPreviewImageUrl(e.target.value)}
                     />
-                    {errors.previewImageUrl}
+                    <p className="errors" value="Preview image is required">{errors.previewImageUrl}</p>
                     <input
                     type="text"
                     value={image1Url}
