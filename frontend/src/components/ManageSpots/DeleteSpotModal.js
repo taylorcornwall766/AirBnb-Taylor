@@ -7,6 +7,7 @@ import { deleteSpotThunk } from "../../store/spots";
 
 const DeleteSpotModal = ({spotId}) => {
   const dispatch = useDispatch();
+  console.log(spotId)
 //   const [credential, setCredential] = useState("");
 //   const [password, setPassword] = useState("");
 //   const [errors, setErrors] = useState({});
@@ -22,7 +23,8 @@ const DeleteSpotModal = ({spotId}) => {
     //       console.log(data.errors);
     //     }
     //   });
-    // const response = await dispatch(deleteSpotThunk(spotId))
+    const response = await dispatch(deleteSpotThunk(spotId))
+    closeModal()
 
   }
   const handleCancel = (e) =>{
