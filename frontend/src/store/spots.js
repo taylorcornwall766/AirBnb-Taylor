@@ -57,7 +57,8 @@ export const loadUserSpotsThunk = (userId) => async(dispatch) =>{
     const data = await response.json()
     if(response.ok){
         const normalSpots = {}
-        data.spots.forEach((spot) => {
+        console.log("data: ",data)
+        data.Spots.forEach((spot) => {
             normalSpots[spot.id] = spot
         })
         dispatch(getAllSpots(normalSpots))
@@ -92,8 +93,8 @@ export const loadSpotsThunk = () => async(dispatch) =>{
 }
 
 export const createSpotThunk = (spot, spotImages) => async(dispatch) =>{
-    console.log(spot)
-    console.log(spotImages)
+    // console.log(spot)
+    // console.log(spotImages)
     try{
 
         const response = await csrfFetch(`/api/spots`, {
@@ -103,11 +104,14 @@ export const createSpotThunk = (spot, spotImages) => async(dispatch) =>{
             },
             body: JSON.stringify(spot),
         });
+        // console.log("response.ok: ",response.ok)
         if(response.ok){
             const spotData = await response.json()
-            console.log("spotData",spotData)
-            console.log("message", spotData.errors)
+            // console.log("spotData",spotData)
+            // console.log("message", spotData.errors)
+            // console.log("spotImages", spotImages)
             for(let i = 0; i < spotImages.length; i++){
+                console.log("spotImages at i :", spotImages[i])
                 const response = await csrfFetch(`/api/spots/${spotData.id}/images`, {
                     method: "post",
                     headers: {
@@ -116,7 +120,7 @@ export const createSpotThunk = (spot, spotImages) => async(dispatch) =>{
                     body: JSON.stringify(spotImages[i]),
                 });
                 const imageData = await response.json()
-                console.log(imageData)
+                // console.log(imageData)
             }
             dispatch(createNewSpot(spotData))
             return spotData
@@ -148,6 +152,7 @@ export const deleteSpotThunk = (spotId) => async(dispatch) => {
 }
 
 export const editSpotThunk = (spot) => async(dispatch) =>{
+    console.log("thunk spot", spot)
     const response = await csrfFetch(`/api/spots/${spot.id}`, {
         method: "put",
         headers: {
@@ -159,6 +164,7 @@ export const editSpotThunk = (spot) => async(dispatch) =>{
     if(response.ok){
         dispatch(createNewSpot(spot))
     }
+    return data
 }
 
 const initialState = {allSpots: {}, singleSpot: {}};
@@ -168,7 +174,7 @@ const spotsReducer = (state = initialState, action) => {
     case GET_ALL_SPOTS:{
         const newState = {...state}
         // console.log('1',newState)
-        newState.allSpots = {...action.payload}
+        newState.allSpots = action.payload
         return newState;
     }
     case GET_SPOT_DETAILS:{

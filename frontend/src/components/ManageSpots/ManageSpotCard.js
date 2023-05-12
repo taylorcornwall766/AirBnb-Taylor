@@ -1,14 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import "./SpotsIndexItem.css"
-const SpotsIndexItem = ({ spot, id,  }) => {
+import OpenModalButton from '../OpenModalButton';
+import DeleteSpotModal from './DeleteSpotModal';
+import { useDispatch } from 'react-redux';
+import { loadSpotDetailsThunk } from '../../store/spots';
+// import "./SpotsIndexItem.css"
+const ManageSpotsIndexItem = ({ spot, id,  }) => {
+    // console.log(spot.id)
+    const dispatch = useDispatch()
     const defaultImg = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhdXRpZnVsJTIwaG91c2V8ZW58MHx8MHx8&w=1000&q=80"
     let ratingComponent;
     const history = useHistory()
     const handleClick = () => {
+        console.log("1 - div")
         history.push(`/spots/${spot.id}`)
     }
+    const handleUpdateClick = async() => {
+        const response = await dispatch(loadSpotDetailsThunk(spot.id))
+        history.push(`/spots/${spot.id}/edit`)
+    }
+
     // console.log("typeof spot.avgRating: ",typeof spot.avgRating)
     // console.log("spot.avgRating: ",spot.avgRating)
     //                                       FOR DEVELOPMENT
@@ -26,6 +38,9 @@ const SpotsIndexItem = ({ spot, id,  }) => {
         )
     }
     return (
+        <div className="spot-item-card-parent">
+
+
         <div className="spot-item-container" id={id} onClick={handleClick}>
             {/* make the images dynamic, add an image container for background image */}
             <img src={spot.previewImage || defaultImg}></img>
@@ -37,7 +52,16 @@ const SpotsIndexItem = ({ spot, id,  }) => {
             </div>
             <p className="price">{`$${spot.price} night`}</p>
         </div>
+            <div className='button-holder'>
+                <button className="update-button update" onClick={handleUpdateClick}>Update</button>
+                <OpenModalButton
+                    className="delete-button delete"
+                    buttonText="Delete"
+                    modalComponent={<DeleteSpotModal spotId={spot.id}/>}
+                />
+            </div>
+        </div>
     )
 }
 
-export default SpotsIndexItem
+export default ManageSpotsIndexItem

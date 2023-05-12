@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadSpotsThunk } from "../../store/spots";
-import SpotsIndexItem from "./SpotsIndexItem";
-import "./SpotsIndex.css"
+import { loadUserSpotsThunk } from "../../store/spots";
+import ManageSpotsIndexItem from "./ManageSpotCard.js"
+
+// import "./SpotsIndex.css"
 const ManageSpotsIndex = () => {
     const spots = useSelector((state) => state.spots)
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        dispatch(loadSpotsThunk())
+        dispatch(loadUserSpotsThunk())
     }, [dispatch])
+    // console.log(spots)
     if(spots.allSpots){
         const spotsArray = Object.values(spots.allSpots)
         // console.log("spotsArray", spotsArray)

@@ -1,49 +1,50 @@
 import React, { useState } from "react";
 // import * as sessionActions from "../../store/session";
-import { useDispatch } from "react-redux";
-import { createSpotThunk } from "../../store/spots";
-import { useHistory } from "react-router-dom";
-function CreateSpotForm(){
+import { useDispatch, useSelector } from "react-redux";
+import { createSpotThunk, editSpotThunk } from "../../store/spots";
+import { useHistory, useParams } from "react-router-dom";
+function EditSpotForm(){
     const history = useHistory()
     const dispatch = useDispatch()
-
-    const [country, setCountry] = useState("")
-    const [streetAddress, setStreetAddress] = useState("")
-    const [city, setCity] = useState("")
-    const [state, setState] = useState("")
+    const spot = useSelector((state) => state.spots.singleSpot)
+    const {spotId} = useParams()
+    const [country, setCountry] = useState(spot.country)
+    const [streetAddress, setStreetAddress] = useState(spot.address)
+    const [city, setCity] = useState(spot.city)
+    const [state, setState] = useState(spot.state)
     const [latitude, setLatitude] = useState(1)
     const [longitude, setLongitude] = useState(1)
-    const [description, setDescription] = useState("")
-    const [name, setName] = useState("")
-    const [price, setPrice] = useState("")
-    const [previewImageUrl, setPreviewImageUrl] = useState("")
-    const [image1Url, setImage1Url] = useState("")
-    const [image2Url, setImage2Url] = useState("")
-    const [image3Url, setImage3Url] = useState("")
-    const [image4Url, setImage4Url] = useState("")
+    const [description, setDescription] = useState(spot.description)
+    const [name, setName] = useState(spot.name)
+    const [price, setPrice] = useState(spot.price)
+    // const [previewImageUrl, setPreviewImageUrl] = useState(spot.SpotImages.find((image)=> image.preview === true))
+    // const [image1Url, setImage1Url] = useState("")
+    // const [image2Url, setImage2Url] = useState("")
+    // const [image3Url, setImage3Url] = useState("")
+    // const [image4Url, setImage4Url] = useState("")
     const [errors, setErrors] = useState({})
     // const errors = {}
     const handleSubmit = async(e) => {
-        console.log("previewImageUrl: ", previewImageUrl)
-        console.log("previewImageUrl.length: ", previewImageUrl.length)
+        // console.log("previewImageUrl: ", previewImageUrl)
+        // console.log("previewImageUrl.length: ", previewImageUrl.length)
 
         // setErrors({})
 
         const newErrors = {}
         e.preventDefault()
-        console.log(!country.length)
+        // console.log(!country.length)
         if(!country.length){
             newErrors.country = "Country is required"
         }
-        console.log("1 :", errors)
+        // console.log("1 :", errors)
         if(!streetAddress.length){
             newErrors.streetAddress = "Address is required"
         }
-        console.log("2 :", errors)
+        // console.log("2 :", errors)
         if(!city.length){
             newErrors.city= "City is required"
         }
-        console.log("3 :", errors)
+        // console.log("3 :", errors)
         if(!state.length){
             newErrors.state = "State is required"
         }
@@ -56,13 +57,14 @@ function CreateSpotForm(){
         if(!price.length){
             newErrors.price = "Price is required"
         }
-        if(!previewImageUrl.length){
-            newErrors.previewImageUrl = "Preview image is required"
-        }
+        // if(!previewImageUrl.length){
+        //     newErrors.previewImageUrl = "Preview image is required"
+        // }
         setErrors(newErrors)
         if(!Object.values(errors).length){
 
         }
+
         const newSpot = {
             address: streetAddress,
             city: city,
@@ -73,42 +75,44 @@ function CreateSpotForm(){
             price: Number(price),
             lat: 1,
             lng: 1,
+            id:spotId
         }
-        if(!latitude){
-            newSpot.lat = Number(latitude)
-        }
-        if(!longitude){
-            newSpot.lng = Number(longitude)
-        }
-        const spotImages = []
-        spotImages.push({url:previewImageUrl, preview: true})
-        if(image1Url.length){
-            spotImages.push({url: image1Url, preview: false})
-        }
-        if(image2Url.length){
-            spotImages.push({url: image2Url, preview: false})
-        }
-        if(image3Url.length){
-            spotImages.push({url: image3Url, preview: false})
-        }
-        if(image4Url.length){
-            spotImages.push({url: image4Url, preview: false})
-        }
-        console.log(newSpot)
-        console.log("preview image url: ", previewImageUrl)
+        // if(!latitude){
+        //     newSpot.lat = Number(latitude)
+        // }
+        // if(!longitude){
+        //     newSpot.lng = Number(longitude)
+        // }
+        // const spotImages = []
+        // spotImages.push({url:previewImageUrl, preview: true})
+        // if(image1Url.length){
+        //     spotImages.push({url: image1Url, preview: false})
+        // }
+        // if(image2Url.length){
+        //     spotImages.push({url: image2Url, preview: false})
+        // }
+        // if(image3Url.length){
+        //     spotImages.push({url: image3Url, preview: false})
+        // }
+        // if(image4Url.length){
+        //     spotImages.push({url: image4Url, preview: false})
+        // }
+        // console.log(newSpot)
+        // console.log("preview image url: ", previewImageUrl)
         if(!Object.values(errors).length){
-            console.log('hit')
-            const response = await dispatch(createSpotThunk(newSpot, spotImages))
+            // console.log('hit')
+            const response = await dispatch(editSpotThunk(newSpot))
+            console.log("edit form response",response)
             if(response.id){
                 history.push(`/spots/${response.id}`)
             }else{
                 console.log(response)
                 const newerErrors = {...response.errors, ...errors}
-                setErrors({...response.errors})
+                setErrors(newerErrors)
                 console.log("errors: ", errors)
             }
         }
-        console.log('errors:   ',errors)
+        // console.log('errors:   ',errors)
         // if(image1Url && image1Url.split('.')[image1Url.split('.').length-1])
     }
     return (
@@ -206,7 +210,7 @@ function CreateSpotForm(){
                     />
                     <p className="errors">{errors.price}</p>
                 </label>
-                <label>
+                {/* <label>
                     <h3>Liven up your spot with photos</h3>
                     <p>
                     Submit a link to at least one photo to publish your spot.
@@ -217,8 +221,8 @@ function CreateSpotForm(){
                     value={previewImageUrl}
                     onChange={(e) => setPreviewImageUrl(e.target.value)}
                     />
-                    <p className="errors" value="Preview image is required">{errors.previewImageUrl}</p>
-                    <input
+                    <p className="errors" value="Preview image is required">{errors.previewImageUrl}</p> */}
+                    {/* <input
                     type="text"
                     value={image1Url}
                     onChange={(e) => setImage1Url(e.target.value)}
@@ -237,11 +241,11 @@ function CreateSpotForm(){
                     type="text"
                     value={image4Url}
                     onChange={(e) => setImage4Url(e.target.value)}
-                    />
-                </label>
+                    /> */}
+                {/* </label> */}
 
                 <button type="submit">
-                Create Spot
+                Update Spot
                 </button>
 
             </form>
@@ -249,4 +253,4 @@ function CreateSpotForm(){
     )
 }
 
-export default CreateSpotForm
+export default EditSpotForm
