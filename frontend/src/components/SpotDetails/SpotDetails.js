@@ -5,15 +5,26 @@ import { useParams } from "react-router-dom";
 import "./SpotDetails.css"
 import { loadSpotReviewsThunk } from "../../store/reviews";
 import ReviewCard from "./ReviewCard";
-
+import PostReviewModal from "../PostReviewModal";
+import OpenModalButton from "../OpenModalButton";
 const SpotDetails = () => {
     const {spotId} = useParams()
+    const dispatch = useDispatch();
+
+    // dispatch(loadSpotReviewsThunk(spotId))
+    // dispatch(loadSpotDetailsThunk(spotId))
+
     const spot = useSelector((state) => state.spots.singleSpot)
     const reviews = useSelector((state) => state.reviews.spot)
+    const user = useSelector((state) => state.session.user)
     const reviewsArr = Object.values(reviews)
 
-    // console.log("reviewsArr: ", reviewsArr)
-    const dispatch = useDispatch();
+    const reviewFound = reviewsArr.find((review) => {
+        // console.log(review)
+        // console.log(user.id)
+        return review.userId === user.id
+    })
+
 
 
 
@@ -22,8 +33,10 @@ const SpotDetails = () => {
     }
 
     useEffect(()=>{
-        dispatch(loadSpotDetailsThunk(spotId))
+        // const getData = async() =>{
         dispatch(loadSpotReviewsThunk(spotId))
+        dispatch(loadSpotDetailsThunk(spotId))
+        // }
     }, [dispatch])
     if(!spot.SpotImages){
         return null
@@ -38,8 +51,13 @@ const SpotDetails = () => {
             description,
             price,
             avgStarRating,
-            numReviews
+            numReviews,
         } = spot
+        // console.log("numReviews: ", numReviews, typeof numReviews)
+        let ratingText = "New"
+        if(avgStarRating){
+            ratingText = `${avgStarRating}`
+        }
         // console.log(numReviews)
         const imagesArr = Object.values(spot.SpotImages)
         // console.log("spot: ", spot)
@@ -100,9 +118,13 @@ const SpotDetails = () => {
                         <div className="rating-container small">
                             <div className="avg-rating-container small">
                             <i className="fa-solid fa-star rating small"></i>
-                            <h3 className="avg-rating small">{avgStarRating}</h3>
+                            <h3 className="avg-rating small">{ratingText}</h3>
                             </div>
-                            <h3 className="num-reviews small">{`${numReviews} reviews`}</h3>
+                            {
+                                numReviews>0 && <h3 className="num-reviews small">{`${numReviews} reviews`}</h3>
+                            }
+
+                            {/* <h3 className="num-reviews small">{`${numReviews} reviews`}</h3> */}
                         </div>
                         <button onClick={ReserveButtonClick}className="reserve-button">Reserve</button>
                     </div>
@@ -112,9 +134,15 @@ const SpotDetails = () => {
                     <div className="review-info-container big">
                         <div className="avg-rating-container big">
                             <i className="fa-solid fa-star rating big"></i>
-                            <h3 className="avg-rating big">{avgStarRating}</h3>
+                            <h3 className="avg-rating big">{ratingText}</h3>
                         </div>
                     </div>
+                    {
+                        user && user.id && Owner.id !== user.id && !reviewFound && <OpenModalButton
+                        buttonText="Post Your Review"
+                        modalComponent={<PostReviewModal spotId={spotId}/>}
+                      />
+                    }
                     {reviewsArr.map((review) => {
 
                         return <ReviewCard review={review} key={`${review.id}-review-key`}/>
