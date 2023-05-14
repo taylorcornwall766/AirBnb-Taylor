@@ -3,10 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadSpotDetailsThunk } from "../../store/spots";
 import { useParams } from "react-router-dom";
 import "./SpotDetails.css"
+import { loadSpotReviewsThunk } from "../../store/reviews";
+import ReviewCard from "./ReviewCard";
 
 const SpotDetails = () => {
     const {spotId} = useParams()
     const spot = useSelector((state) => state.spots.singleSpot)
+    const reviews = useSelector((state) => state.reviews.spot)
+    const reviewsArr = Object.values(reviews)
+
+    // console.log("reviewsArr: ", reviewsArr)
     const dispatch = useDispatch();
 
 
@@ -17,6 +23,7 @@ const SpotDetails = () => {
 
     useEffect(()=>{
         dispatch(loadSpotDetailsThunk(spotId))
+        dispatch(loadSpotReviewsThunk(spotId))
     }, [dispatch])
     if(!spot.SpotImages){
         return null
@@ -36,7 +43,7 @@ const SpotDetails = () => {
         // console.log(numReviews)
         const imagesArr = Object.values(spot.SpotImages)
         // console.log("spot: ", spot)
-        console.log(imagesArr)
+        // console.log(imagesArr)
 
         // rendering all of our images
         let previewImageFound = false
@@ -76,7 +83,7 @@ const SpotDetails = () => {
                 )
             }
         }
-        console.log("testing images arr: ",imagesArr)
+        // console.log("testing images arr: ",imagesArr)
         return (
             <div className="details-container" id={`spot-details-${spotId}`}>
                 <h2 className="spot-name">{name}</h2>
@@ -107,9 +114,11 @@ const SpotDetails = () => {
                             <i className="fa-solid fa-star rating big"></i>
                             <h3 className="avg-rating big">{avgStarRating}</h3>
                         </div>
-                        <h3 className="num-reviews big">{`${numReviews} reviews`}</h3>
                     </div>
-                    {/* ADD REVIEWS MAP HERE*/}
+                    {reviewsArr.map((review) => {
+
+                        return <ReviewCard review={review} key={`${review.id}-review-key`}/>
+                    })}
                 </div>
             </div>
         )

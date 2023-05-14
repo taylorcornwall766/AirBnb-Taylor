@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import OpenModalButton from '../OpenModalButton';
 import DeleteSpotModal from './DeleteSpotModal';
 import { useDispatch } from 'react-redux';
 import { loadSpotDetailsThunk } from '../../store/spots';
-// import "./SpotsIndexItem.css"
+
 const ManageSpotsIndexItem = ({ spot, id,  }) => {
     // console.log(spot.id)
     const dispatch = useDispatch()

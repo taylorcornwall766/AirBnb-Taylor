@@ -21,7 +21,7 @@ export const loadSpotReviewsThunk = (spotId) => async(dispatch)=>{
    return data
 }
 
-const initialState = {spot: null, user:null}
+const initialState = {spot: {}, user: {}}
 
 const reviewsReducer = (state = initialState, action) => {
     switch (action.type) {

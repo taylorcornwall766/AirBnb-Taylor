@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUserSpotsThunk } from "../../store/spots";
 import ManageSpotsIndexItem from "./ManageSpotCard.js"
-
+import { useHistory } from "react-router-dom";
 // import "./SpotsIndex.css"
 const ManageSpotsIndex = () => {
     const spots = useSelector((state) => state.spots)
     const dispatch = useDispatch();
+    const history = useHistory()
+    const handleClick=()=>{
+        history.push("/spots/new")
+    }
 
     useEffect(()=>{
         dispatch(loadUserSpotsThunk())
@@ -16,6 +20,9 @@ const ManageSpotsIndex = () => {
         const spotsArray = Object.values(spots.allSpots)
         // console.log("spotsArray", spotsArray)
         return (
+            <>
+            <h1 className="manage">Manage Your Spots</h1>
+            <button onClick={handleClick}>Create a New Spot</button>
             <div className="manage-spot-index" id="manage-spot-index">
                     {
                         spotsArray.map(spot => (
@@ -28,8 +35,9 @@ const ManageSpotsIndex = () => {
                             className={'manage-spot-index-item'}
                             />
                             )
-                    )}
+                            )}
             </div>
+            </>
         )
     }else{
         return (null)
