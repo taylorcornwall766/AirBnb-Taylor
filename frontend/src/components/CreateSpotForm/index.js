@@ -24,26 +24,26 @@ function CreateSpotForm(){
     const [errors, setErrors] = useState({})
     // const errors = {}
     const handleSubmit = async(e) => {
-        console.log("previewImageUrl: ", previewImageUrl)
-        console.log("previewImageUrl.length: ", previewImageUrl.length)
+        // console.log("previewImageUrl: ", previewImageUrl)
+        // console.log("previewImageUrl.length: ", previewImageUrl.length)
 
         // setErrors({})
 
         const newErrors = {}
         e.preventDefault()
-        console.log(!country.length)
+        // console.log(!country.length)
         if(!country.length){
             newErrors.country = "Country is required"
         }
-        console.log("1 :", errors)
+        // console.log("1 :", errors)
         if(!streetAddress.length){
             newErrors.streetAddress = "Address is required"
         }
-        console.log("2 :", errors)
+        // console.log("2 :", errors)
         if(!city.length){
             newErrors.city= "City is required"
         }
-        console.log("3 :", errors)
+        // console.log("3 :", errors)
         if(!state.length){
             newErrors.state = "State is required"
         }
@@ -60,9 +60,7 @@ function CreateSpotForm(){
             newErrors.previewImageUrl = "Preview image is required"
         }
         setErrors(newErrors)
-        if(!Object.values(errors).length){
 
-        }
         const newSpot = {
             address: streetAddress,
             city: city,
@@ -94,10 +92,10 @@ function CreateSpotForm(){
         if(image4Url.length){
             spotImages.push({url: image4Url, preview: false})
         }
-        console.log(newSpot)
-        console.log("preview image url: ", previewImageUrl)
-        if(!Object.values(errors).length){
-            console.log('hit')
+        // console.log(newSpot)
+        // console.log("preview image url: ", previewImageUrl)
+        if(!Object.values(errors).length && description.length >= 30){
+            // console.log('hit')
             const response = await dispatch(createSpotThunk(newSpot, spotImages))
             if(response.id){
                 history.push(`/spots/${response.id}`)
