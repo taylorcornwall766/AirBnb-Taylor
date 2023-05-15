@@ -152,7 +152,7 @@ const SpotDetails = () => {
                     }
                     {reviewsArr.map((review) => {
 
-                        return <ReviewCard userId={user.id} review={review} key={`${review.id}-review-key`}/>
+                        return <ReviewCard userId={user && user.id} review={review} key={`${review.id}-review-key`}/>
                     })}
                 </div>
             </div>
