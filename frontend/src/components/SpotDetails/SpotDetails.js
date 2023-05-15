@@ -13,7 +13,10 @@ const SpotDetails = () => {
 
     // dispatch(loadSpotReviewsThunk(spotId))
     // dispatch(loadSpotDetailsThunk(spotId))
-
+    // useEffect(()=>{
+    //     // dispatch(loadSpotReviewsThunk(spotId))
+    //     // dispatch(loadSpotDetailsThunk(spotId))
+    // },[])
     const spot = useSelector((state) => state.spots.singleSpot)
     const reviews = useSelector((state) => state.reviews.spot)
     const user = useSelector((state) => state.session.user)
@@ -121,7 +124,7 @@ const SpotDetails = () => {
                             <h3 className="avg-rating small">{ratingText}</h3>
                             </div>
                             {
-                                numReviews>0 && <h3 className="num-reviews small">{`${numReviews} reviews`}</h3>
+                                numReviews>0 && <h3 className="num-reviews small">{`${numReviews} ${numReviews>1?"reviews":"review"}`}</h3>
                             }
 
                             {/* <h3 className="num-reviews small">{`${numReviews} reviews`}</h3> */}
@@ -145,7 +148,7 @@ const SpotDetails = () => {
                     }
                     {reviewsArr.map((review) => {
 
-                        return <ReviewCard review={review} key={`${review.id}-review-key`}/>
+                        return <ReviewCard userId={user.id} review={review} key={`${review.id}-review-key`}/>
                     })}
                 </div>
             </div>
