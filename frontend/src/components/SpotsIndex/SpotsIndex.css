@@ -1,8 +1,11 @@
 .spot-index{
-    display:inline-flex;
-    flex-wrap: wrap;
-    padding-left: 5%;
-    padding-right: 5%;
+    /* display:inline-flex; */
     margin: 0 auto;
-    /* justify-content: space-between; */
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* grid-template-rows: repeat(2, 1fr); */
+    /* aspect-ratio: 2/1; */
+    box-sizing: border-box;
+    gap: 10px;
 }

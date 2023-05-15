@@ -57,7 +57,7 @@ export const loadUserSpotsThunk = (userId) => async(dispatch) =>{
     const data = await response.json()
     if(response.ok){
         const normalSpots = {}
-        console.log("data: ",data)
+        // console.log("data: ",data)
         data.Spots.forEach((spot) => {
             normalSpots[spot.id] = spot
         })
@@ -111,7 +111,7 @@ export const createSpotThunk = (spot, spotImages) => async(dispatch) =>{
             // console.log("message", spotData.errors)
             // console.log("spotImages", spotImages)
             for(let i = 0; i < spotImages.length; i++){
-                console.log("spotImages at i :", spotImages[i])
+                // console.log("spotImages at i :", spotImages[i])
                 const response = await csrfFetch(`/api/spots/${spotData.id}/images`, {
                     method: "post",
                     headers: {
@@ -126,7 +126,7 @@ export const createSpotThunk = (spot, spotImages) => async(dispatch) =>{
             return spotData
         }else{
             const data = await response.json()
-            console.log(data.message)
+            // console.log(data.message)
         }
 
     }catch(error){
@@ -144,7 +144,7 @@ export const deleteSpotThunk = (spotId) => async(dispatch) => {
       });
     const data = await response.json()
     if(response.ok){
-        console.log("deleted")
+        // console.log("deleted")
         dispatch(deleteSpot(spotId))
         return data
     }
@@ -152,7 +152,7 @@ export const deleteSpotThunk = (spotId) => async(dispatch) => {
 }
 
 export const editSpotThunk = (spot) => async(dispatch) =>{
-    console.log("thunk spot", spot)
+    // console.log("thunk spot", spot)
     const response = await csrfFetch(`/api/spots/${spot.id}`, {
         method: "put",
         headers: {
@@ -189,7 +189,7 @@ const spotsReducer = (state = initialState, action) => {
     }
     case POST_NEW_SPOT:{
         const newState = {...state}
-        console.log(action.playload)
+        // console.log(action.playload)
         // newState.allSpots[action.payload.spot.id] = action.payload.spot
         newState.singleSpot = action.payload.spot
         return newState

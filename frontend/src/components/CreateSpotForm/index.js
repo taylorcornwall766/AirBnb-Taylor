@@ -59,7 +59,7 @@ function CreateSpotForm(){
         if(!previewImageUrl.length){
             newErrors.previewImageUrl = "Preview image is required"
         }
-        setErrors(newErrors)
+        setErrors({...newErrors})
 
         const newSpot = {
             address: streetAddress,

@@ -6,7 +6,7 @@ import { deleteSpotThunk } from "../../store/spots";
 
 const DeleteSpotModal = ({spotId}) => {
   const dispatch = useDispatch();
-  console.log(spotId)
+  // console.log(spotId)
 //   const [credential, setCredential] = useState("");
 //   const [password, setPassword] = useState("");
 //   const [errors, setErrors] = useState({});
@@ -14,8 +14,8 @@ const DeleteSpotModal = ({spotId}) => {
   const { closeModal } = useModal();
   const handleDelete = async() => {
     // e.preventDefault()
-    console.log("check")
-    console.log("check", spotId)
+    // console.log("check")
+    // console.log("check", spotId)
     // return dispatch(deleteSpotThunk(spotId)).then(closeModal).catch(async (res) => {
     //     const data = await res.json();
     //     if (data && data.errors) {
