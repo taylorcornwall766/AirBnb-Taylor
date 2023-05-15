@@ -32,7 +32,6 @@ function PostReviewModal( {spotId} ) {
       <h1>How was your stay?</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Username or Email
           <textarea
             type="text"
             value={review}
