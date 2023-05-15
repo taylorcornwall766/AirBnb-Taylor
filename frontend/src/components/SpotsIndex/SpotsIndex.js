@@ -12,7 +12,7 @@ const SpotsIndex = () => {
     }, [dispatch])
     if(spots.allSpots){
         const spotsArray = Object.values(spots.allSpots)
-        console.log("spotsArray", spotsArray)
+        // console.log("spotsArray", spotsArray)
         return (
             <div className="spot-index" id="spot-index">
                     {
@@ -21,6 +21,7 @@ const SpotsIndex = () => {
 
                             <SpotsIndexItem
                             spot={spot}
+                            key={`spot-index-item-key-${spot.id}`}
                             id={`spot-index-item-${spot.id}`}
                             className={'spot-index-item'}
                             />
