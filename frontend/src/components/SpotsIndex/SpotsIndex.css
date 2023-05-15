@@ -10,6 +10,18 @@
     gap: 10px;
 }
 
+p{
+    font-size: 14px;
+    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Noto Sans Tangsa', sans-serif;
+}
+.price{
+    font-weight: bold;
+}
+.rating-container{
+    font-weight: bold;
+}
+
 @media screen and (max-width: 1024px){
     .spot-index{
         grid-template-columns: repeat(3, 1fr);

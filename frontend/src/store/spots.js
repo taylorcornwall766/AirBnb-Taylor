@@ -53,16 +53,25 @@ const createNewSpot = (spot) => {
 }
 
 export const loadUserSpotsThunk = (userId) => async(dispatch) =>{
-    const response = await csrfFetch(`/api/spots/current`)
-    const data = await response.json()
-    if(response.ok){
-        const normalSpots = {}
+
+    try{
+
+        const response = await csrfFetch(`/api/spots/current`)
+        const data = await response.json()
+        if(response.ok){
+            const normalSpots = {}
         // console.log("data: ",data)
         data.Spots.forEach((spot) => {
             normalSpots[spot.id] = spot
         })
         dispatch(getAllSpots(normalSpots))
         return normalSpots
+    }
+    dispatch(getAllSpots({}))
+    return {}
+    }catch(errors){
+        console.log(errors)
+        dispatch(getAllSpots({}))
     }
 }
 

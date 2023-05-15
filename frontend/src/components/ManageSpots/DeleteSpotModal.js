@@ -37,7 +37,7 @@ const DeleteSpotModal = ({spotId}) => {
         <h1 className="confirm-header">Confirm Delete</h1>
         <p className="confirm-p">Are you sure you want to remove this spot from the listings?</p>
         <button onClick={handleDelete}className="delete-button">Yes (Delete Spot)</button>
-        <button onClick={handleCancel}className="cancel-button">No (Keep Spot)</button>
+        <button id="cancel-delete"onClick={handleCancel}className="cancel-button">No (Keep Spot)</button>
     </>
   );
 }

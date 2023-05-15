@@ -22,7 +22,7 @@ const SpotsIndexItem = ({ spot, id,  }) => {
         )
     }else{
         ratingComponent = (
-            <p className="rating">No Reviews</p>
+            <p className="rating">New</p>
         )
     }
     return (

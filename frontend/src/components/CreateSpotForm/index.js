@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createSpotThunk } from "../../store/spots";
 import { useHistory } from "react-router-dom";
+import "./CreateSpot.css"
 function CreateSpotForm(){
     const history = useHistory()
     const dispatch = useDispatch()
@@ -110,7 +111,7 @@ function CreateSpotForm(){
         // if(image1Url && image1Url.split('.')[image1Url.split('.').length-1])
     }
     return (
-        <>
+        <div className="container-form">
             <h1>Create a New Spot</h1>
             <h3>Wheres your place located?</h3>
             <p>Guests will only get your exact address once they have booked a reservation.</p>
@@ -118,6 +119,7 @@ function CreateSpotForm(){
                 <label>
                     Country
                     <input
+                    placeholder="Country"
                     type="text"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
@@ -127,6 +129,7 @@ function CreateSpotForm(){
                 <label>
                     Street Address
                     <input
+                    placeholder="Street Address"
                     type="text"
                     value={streetAddress}
                     onChange={(e) => setStreetAddress(e.target.value)}
@@ -136,6 +139,7 @@ function CreateSpotForm(){
                 <label>
                     City
                     <input
+                    placeholder="City"
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
@@ -145,12 +149,14 @@ function CreateSpotForm(){
                 <label>
                     State
                     <input
+                    placeholder="State"
                     type="text"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                     />
                     <p className="errors">{errors.state}</p>
                 </label>
+                <hr></hr>
                 {/* <label>
                     Latitude
                     <input
@@ -173,23 +179,27 @@ function CreateSpotForm(){
                         Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.
                     </p>
                     <textarea
+                    placeholder="Please write at least 30 characters"
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     />
                     <p className="errors">{errors.description}</p>
                 </label>
+                <hr></hr>
                 <label>
                     <h3>Create a title for your spot</h3>
                     <p>
                     Catch guests' attention with a spot title that highlights what makes your place special.
                     </p>
                     <input
+                    placeholder="Name of your spot"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     />
                     <p className="errors">{errors.title}</p>
+                    <hr></hr>
                 </label>
                 <label>
                     <h3>Set a base price for your spot</h3>
@@ -198,11 +208,13 @@ function CreateSpotForm(){
                     </p>
                     $
                     <input
+                    placeholder="Price per night (USD)"
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     />
                     <p className="errors">{errors.price}</p>
+                    <hr></hr>
                 </label>
                 <label>
                     <h3>Liven up your spot with photos</h3>
@@ -211,39 +223,44 @@ function CreateSpotForm(){
                     </p>
 
                     <input
+                    placeholder="Preview Image URL"
                     type="text"
                     value={previewImageUrl}
                     onChange={(e) => setPreviewImageUrl(e.target.value)}
                     />
                     <p className="errors" value="Preview image is required">{errors.previewImageUrl}</p>
                     <input
+                    placeholder="Image URL"
                     type="text"
                     value={image1Url}
                     onChange={(e) => setImage1Url(e.target.value)}
                     />
                     <input
+                    placeholder="Image URL"
                     type="text"
                     value={image2Url}
                     onChange={(e) => setImage2Url(e.target.value)}
                     />
                     <input
+                    placeholder="Image URL"
                     type="text"
                     value={image3Url}
                     onChange={(e) => setImage3Url(e.target.value)}
                     />
                     <input
+                    placeholder="Image URL"
                     type="text"
                     value={image4Url}
                     onChange={(e) => setImage4Url(e.target.value)}
                     />
                 </label>
 
-                <button type="submit">
+                <button type="submit" disabled={!country.length}>
                 Create Spot
                 </button>
 
             </form>
-        </>
+        </div>
     )
 }
 
