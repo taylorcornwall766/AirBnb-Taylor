@@ -26,7 +26,9 @@ const SpotDetails = () => {
     const reviewFound = reviewsArr.find((review) => {
         console.log(review)
         // console.log(user.id)
-        return review.userId === user.id
+        if(user){
+            return review.userId === user.id
+        }
     })
 
 
