@@ -22,10 +22,10 @@ const SpotDetails = () => {
     const user = useSelector((state) => state.session.user)
     const reviewsArr = Object.values(reviews)
 
-    console.log("user", user)
-    console.log("reviewsArr",reviewsArr)
+    // console.log("user", user)
+    // console.log("reviewsArr",reviewsArr)
     const reviewFound = reviewsArr.find((review) => {
-        console.log("review",review)
+        // console.log("review",review)
         // console.log(user.id)
         if(user){
             return review.userId === user.id
