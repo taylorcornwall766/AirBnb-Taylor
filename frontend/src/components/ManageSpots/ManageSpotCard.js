@@ -12,7 +12,7 @@ const ManageSpotsIndexItem = ({ spot, id,  }) => {
     let ratingComponent;
     const history = useHistory()
     const handleClick = () => {
-        console.log("1 - div")
+        // console.log("1 - div")
         history.push(`/spots/${spot.id}`)
     }
     const handleUpdateClick = async() => {
@@ -33,33 +33,33 @@ const ManageSpotsIndexItem = ({ spot, id,  }) => {
         )
     }else{
         ratingComponent = (
-            <p className="rating">No Reviews</p>
+            <p className="rating">New</p>
         )
     }
     return (
-        <div className="spot-item-card-parent">
 
 
-        <div className="spot-item-container" id={id} onClick={handleClick}>
+        <>
+        <div className="spot-item-container" id={id} >
             {/* make the images dynamic, add an image container for background image */}
-            <img src={spot.previewImage || defaultImg}></img>
-            <div className="state-rating-container">
+            <img src={spot.previewImage || defaultImg}onClick={handleClick}></img>
+            <div className="state-rating-container" onClick={handleClick}>
                 <p className="city-state">{`${spot.city}, ${spot.state}`}</p>
                 <div className="rating-container">
                 {ratingComponent}
-                </div>
             </div>
-            <p className="price">{`$${spot.price} night`}</p>
         </div>
+            <p className="price" onClick={handleClick}>{`$${spot.price} night`}</p>
             <div className='button-holder'>
                 <button className="update-button update" onClick={handleUpdateClick}>Update</button>
                 <OpenModalButton
                     className="delete-button delete"
                     buttonText="Delete"
                     modalComponent={<DeleteSpotModal spotId={spot.id}/>}
-                />
+                    />
             </div>
         </div>
+    </>
     )
 }
 

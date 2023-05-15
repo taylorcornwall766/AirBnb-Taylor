@@ -116,7 +116,7 @@ function EditSpotForm(){
         // if(image1Url && image1Url.split('.')[image1Url.split('.').length-1])
     }
     return (
-        <>
+        <div className="editForm">
             <h1>Create a New Spot</h1>
             <h3>Wheres your place located?</h3>
             <p>Guests will only get your exact address once they have booked a reservation.</p>
@@ -249,7 +249,7 @@ function EditSpotForm(){
                 </button>
 
             </form>
-        </>
+        </div>
     )
 }
 

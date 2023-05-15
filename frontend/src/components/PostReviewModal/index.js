@@ -29,6 +29,7 @@ function PostReviewModal( {spotId} ) {
 
   return (
     <>
+    {Object.values(errors).length > 0 && <p>{`${errors}`}</p>}
       <h1>How was your stay?</h1>
       <form onSubmit={handleSubmit}>
         <label>

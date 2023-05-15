@@ -14,17 +14,17 @@ function Navigation({ isLoaded }) {
   if (sessionUser) {
     sessionLinks = (
       <>
-      <li>
-        <ProfileButton user={sessionUser} />
-      </li>
+      <div className="profile-spot-wrapper">
         <NavLink exact to="/spots/new">
           Create a New Spot
         </NavLink>
+        <ProfileButton user={sessionUser} />
+      </div>
       </>
     );
   } else {
     sessionLinks = (
-      <li>
+      <div className="session-links">
         <OpenModalButton
           buttonText="Log In"
           modalComponent={<LoginFormModal />}
@@ -33,19 +33,19 @@ function Navigation({ isLoaded }) {
           buttonText="Sign Up"
           modalComponent={<SignupFormModal />}
         />
-      </li>
+      </div>
     );
   }
 
   return (
-    <ul>
-      <li>
+    <div className="nav-bar ">
+
         <NavLink exact to="/">
           Home
         </NavLink>
-      </li>
+
       {isLoaded && sessionLinks}
-    </ul>
+    </div>
   );
 }
 

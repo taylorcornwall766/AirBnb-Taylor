@@ -22,13 +22,13 @@ const SpotsIndexItem = ({ spot, id,  }) => {
         )
     }else{
         ratingComponent = (
-            <p className="rating">No Reviews</p>
+            <p className="rating">New</p>
         )
     }
     return (
         <div className="spot-item-container" id={id} onClick={handleClick}>
             {/* make the images dynamic, add an image container for background image */}
-            <img src={spot.previewImage || defaultImg}></img>
+            <img src={spot.previewImage || defaultImg} title={`${spot.name}`}></img>
             <div className="state-rating-container">
                 <p className="city-state">{`${spot.city}, ${spot.state}`}</p>
                 <div className="rating-container">
