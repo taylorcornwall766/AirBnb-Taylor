@@ -15,7 +15,7 @@ const ReviewCard = ({review, userId}) => {
             {userId === review.userId && <OpenModalButton
                         buttonText="Delete"
                         modalComponent={<DeleteReviewModal spotId={review.spotId} reviewId={review.id}/>}
-                      />}
+            />}
         </div>
     )
 }
