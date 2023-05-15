@@ -9,3 +9,21 @@
     box-sizing: border-box;
     gap: 10px;
 }
+
+@media screen and (max-width: 1024px){
+    .spot-index{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px){
+    .spot-index{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 480px){
+    .spot-index{
+        grid-template-columns:  1fr;
+    }
+}

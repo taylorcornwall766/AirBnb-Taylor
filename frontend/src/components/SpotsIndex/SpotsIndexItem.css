@@ -15,7 +15,7 @@
     grid-row: 1/5;
 }
 
-.spot-item-container > img:hover{
+.spot-item-container:hover{
     cursor: pointer;
 }
 
